@@ -18,6 +18,6 @@ public class RoomItem : MonoBehaviour
 
     public void OnClickItem()
     {
-
+        lobbyManager.JoinRoom(roomName.text);
     }
 }

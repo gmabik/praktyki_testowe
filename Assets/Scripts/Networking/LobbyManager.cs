@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
@@ -17,8 +18,14 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] private Transform roomsContent;
     [SerializeField] private RoomItem roomPrefab;
     private List<RoomItem> roomItems = new List<RoomItem>();
+    [SerializeField] private float updateCooldown;
     [Header("CurrentRoom")]
     [SerializeField] private TMP_Text currentRoomName;
+
+    public override void OnConnectedToMaster()
+    {
+        PhotonNetwork.JoinLobby();
+    }
 
     private void Start()
     {
@@ -50,9 +57,14 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         currentRoomName.text = "Room: " + PhotonNetwork.CurrentRoom.Name;
     }
 
+    float nextUpdateTime;
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        UpdateRoomList(roomList);
+        if (Time.time > nextUpdateTime)
+        {
+            UpdateRoomList(roomList);
+            nextUpdateTime = Time.time + updateCooldown;
+        }
     }
 
     private void UpdateRoomList(List<RoomInfo> list)
@@ -60,11 +72,37 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         foreach (RoomItem item in roomItems) Destroy(item.gameObject);
         roomItems.Clear();
 
-        foreach(RoomInfo roomInfo in list)
+        foreach (RoomInfo roomInfo in list)
         {
             RoomItem newRoom = Instantiate(roomPrefab, roomsContent);
             newRoom.SetRoomInfo(roomInfo.Name, roomInfo.PlayerCount, roomInfo.MaxPlayers, this);
             roomItems.Add(newRoom);
         }
+    }
+
+    public void JoinRoom(string roomName)
+    {
+        PhotonNetwork.JoinRoom(roomName);
+    }
+
+    public void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
+
+    public override void OnLeftRoom()
+    {
+        lobbyPanel.SetActive(true);
+        currentRoomPanel.SetActive(false);
+    }
+
+    public void LeaveLobby()
+    {
+        PhotonNetwork.LeaveLobby();
+    }
+
+    public override void OnLeftLobby()
+    {
+        SceneManager.LoadScene("ConnectToServer");
     }
 }
