@@ -21,6 +21,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] private float updateCooldown;
     [Header("CurrentRoom")]
     [SerializeField] private TMP_Text currentRoomName;
+    private List<PlayerItem> playerItems = new List<PlayerItem>();
+    [SerializeField] private PlayerItem playerItemPrefab;
+    [SerializeField] private Transform playerItemParent;
+    [SerializeField] private GameObject playButton;
 
     public override void OnConnectedToMaster()
     {
@@ -32,6 +36,15 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinLobby();
         lobbyPanel.SetActive(true);
         currentRoomPanel.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            playButton.SetActive(true);
+        }
+        else playButton.SetActive(false);
     }
 
     public void OnClickCreateRoom()
@@ -55,6 +68,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         lobbyPanel.SetActive(false);
         currentRoomPanel.SetActive(true);
         currentRoomName.text = "Room: " + PhotonNetwork.CurrentRoom.Name;
+        UpdatePlayerList();
     }
 
     float nextUpdateTime;
@@ -104,5 +118,38 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public override void OnLeftLobby()
     {
         SceneManager.LoadScene("ConnectToServer");
+    }
+
+    private void UpdatePlayerList()
+    {
+        foreach(PlayerItem item in playerItems) Destroy(item.gameObject);
+        playerItems.Clear();
+
+        if (PhotonNetwork.CurrentRoom == null) return;
+
+        foreach(KeyValuePair<int, Player> pair in PhotonNetwork.CurrentRoom.Players) 
+        {
+            PlayerItem newItem = Instantiate(playerItemPrefab, playerItemParent);
+            newItem.SetPlayerInfo(pair.Value);
+
+            if (pair.Value == PhotonNetwork.LocalPlayer) newItem.SetColor();
+
+            playerItems.Add(newItem);
+        }
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        UpdatePlayerList();
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        UpdatePlayerList();
+    }
+
+    public void OnClickPlay()
+    {
+        PhotonNetwork.LoadLevel("Game");
     }
 }
