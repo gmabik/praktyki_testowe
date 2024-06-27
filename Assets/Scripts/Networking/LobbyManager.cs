@@ -132,7 +132,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             PlayerItem newItem = Instantiate(playerItemPrefab, playerItemParent);
             newItem.SetPlayerInfo(pair.Value);
 
-            if (pair.Value == PhotonNetwork.LocalPlayer) newItem.SetColor();
+            if (pair.Value == PhotonNetwork.MasterClient) newItem.SetColor();
 
             playerItems.Add(newItem);
         }

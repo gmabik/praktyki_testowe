@@ -9,13 +9,8 @@ using Photon.Realtime;
 public class PlayerItem : MonoBehaviour
 {
     [SerializeField] private TMP_Text playerNameText;
-    private Image buttonImage;
+    [SerializeField] private Image buttonImage;
     [SerializeField] private Color color;
-
-    private void Start()
-    {
-        buttonImage = GetComponent<Image>();
-    }
 
     public void SetPlayerInfo(Player _player)
     {

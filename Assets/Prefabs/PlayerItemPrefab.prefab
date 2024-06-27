@@ -148,6 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNameText: {fileID: 7931258486238655177}
+  buttonImage: {fileID: 4838422302917845196}
   color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &7900545792636446213
 GameObject:
