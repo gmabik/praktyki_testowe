@@ -29,7 +29,7 @@ public class CursorManager : MonoBehaviour
     {
         Vector2 newPos = (Vector2)Input.mousePosition / canvas.GetComponent<Canvas>().scaleFactor;
         myCursor.GetComponent<RectTransform>().anchoredPosition = newPos;
-        Debug.Log($"Local cursor position: {newPos}");
+        //Debug.Log($"Local cursor position: {newPos}");
         GetComponent<PhotonView>().RPC("UpdateCursorPos", RpcTarget.Others, myCursor.GetComponent<PhotonView>().ViewID, newPos);
     }
 
@@ -41,11 +41,7 @@ public class CursorManager : MonoBehaviour
         {
             GameObject cursor = view.gameObject;
             cursor.GetComponent<RectTransform>().anchoredPosition = newPos;
-            Debug.Log($"Updated cursor position for cursorID {cursorID}: {newPos}");
-        }
-        else
-        {
-            Debug.LogError("PhotonView not found for cursorID: " + cursorID);
+            //Debug.Log($"Updated cursor position for cursorID {cursorID}: {newPos}");
         }
     }
 
@@ -58,32 +54,7 @@ public class CursorManager : MonoBehaviour
             GameObject cursor = view.gameObject;
             cursor.transform.SetParent(canvas, false);
             cursor.GetComponentInChildren<TMP_Text>().text = name;
-            Debug.Log($"Parent set for cursorID {cursorID}");
-        }
-        else
-        {
-            Debug.LogError($"PhotonView not found for cursorID: {cursorID}");
+            //Debug.Log($"Parent set for cursorID {cursorID}");
         }
     }
-
-    #region IPunObservable implementation
-    /*public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-
-        if (stream.IsWriting)
-        {
-            stream.SendNext(myCursor.GetComponent<RectTransform>().anchoredPosition);
-        }
-
-        else
-        {
-            Vector2 pos = (Vector2)stream.ReceiveNext();
-
-            foreach(GameObject cursor in cursorList)
-            {
-                if (cursor.GetComponent<CursorScript>().owner.NickName == info.Sender.NickName) cursor.GetComponent<RectTransform>().anchoredPosition = pos;
-            }
-        }
-    }*/
-    #endregion
 }
