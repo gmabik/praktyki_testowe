@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 41017094}
   - component: {fileID: 41017095}
+  - component: {fileID: 41017096}
   m_Layer: 0
   m_Name: LobbyManager
   m_TagString: Untagged
@@ -178,6 +179,18 @@ MonoBehaviour:
   playerItemPrefab: {fileID: -5192475354155688352, guid: 3060805d4aa9a4140a75580879125450, type: 3}
   playerItemParent: {fileID: 1055987885}
   playButton: {fileID: 1828543595}
+--- !u!114 &41017096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 41017093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1edb9647b3126cd468012c80807ab438, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &55590629
 GameObject:
   m_ObjectHideFlags: 0
@@ -568,7 +581,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1020879057}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999755
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1983,7 +1996,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000021471906}
+  m_AnchoredPosition: {x: 0, y: 0.00034106156}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1581905542
