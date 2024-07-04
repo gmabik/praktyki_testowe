@@ -12,9 +12,8 @@ public class SteamInit : MonoBehaviour
             if (!SteamClient.IsValid)
             {
                 SteamClient.Init(3092070);
-                print("init");
+                print("init " + GetName());
             }
-            print(GetName());
             StartCoroutine(CallBacks());
         }
         catch (System.Exception e)
