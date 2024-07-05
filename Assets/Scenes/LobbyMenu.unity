@@ -643,7 +643,7 @@ RectTransform:
   m_Children:
   - {fileID: 497422692}
   m_Father: {fileID: 789409558}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -1204,7 +1204,7 @@ RectTransform:
   - {fileID: 702665342}
   - {fileID: 192632483}
   m_Father: {fileID: 789409558}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1307,7 +1307,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1623073350}
   - {fileID: 725907123}
   - {fileID: 988079454}
   - {fileID: 528862217}
@@ -1591,7 +1590,7 @@ RectTransform:
   m_Children:
   - {fileID: 1052103162}
   m_Father: {fileID: 789409558}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2234,7 +2233,7 @@ GameObject:
   - component: {fileID: 1302656958}
   - component: {fileID: 1302656957}
   m_Layer: 5
-  m_Name: Open Lobby Join Menu
+  m_Name: Join Lobby Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2258,7 +2257,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: -14}
+  m_AnchoredPosition: {x: 0, y: -29.3}
   m_SizeDelta: {x: 210.3121, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1302656957
@@ -2307,7 +2306,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 41017096}
         m_TargetAssemblyTypeName: SteamRoomManager, Assembly-CSharp
-        m_MethodName: OpenJoinRoomPanel
+        m_MethodName: JoinLobbyWithID
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2798,12 +2797,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 903452391}
-  m_Father: {fileID: 789409558}
-  m_RootOrder: 0
+  m_Father: {fileID: 1668948817}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -235.84389, y: -69.209564}
+  m_AnchoredPosition: {x: 80.1, y: 8.000004}
   m_SizeDelta: {x: 210.3121, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1623073351
@@ -3174,6 +3173,7 @@ RectTransform:
   m_Children:
   - {fileID: 1731608729}
   - {fileID: 1302656956}
+  - {fileID: 1623073350}
   m_Father: {fileID: 1335942906}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3327,6 +3327,7 @@ GameObject:
   - component: {fileID: 1753459650}
   - component: {fileID: 1753459652}
   - component: {fileID: 1753459651}
+  - component: {fileID: 1753459653}
   m_Layer: 5
   m_Name: Lobby ID
   m_TagString: Untagged
@@ -3451,6 +3452,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1753459649}
   m_CullTransparentMesh: 1
+--- !u!114 &1753459653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1753459649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1753459651}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 41017096}
+        m_TargetAssemblyTypeName: SteamRoomManager, Assembly-CSharp
+        m_MethodName: CopyID
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1828543595
 GameObject:
   m_ObjectHideFlags: 0

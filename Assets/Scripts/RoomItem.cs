@@ -7,17 +7,19 @@ public class RoomItem : MonoBehaviour
 {
     [SerializeField] private TMP_Text roomName;
     [SerializeField] private TMP_Text playerAmount;
-    private LobbyManager lobbyManager;
+    private SteamRoomManager manager;
+    private ulong id;
 
-    public void SetRoomInfo(string _roomName, int _playersAmount, int _maxPlayers, LobbyManager manager)
+    public void SetRoomInfo(ulong _id, int _playersAmount, int _maxPlayers, SteamRoomManager _manager)
     {
-        roomName.text = _roomName;
+        id = _id;
+        roomName.text = id.ToString();
         playerAmount.text = _playersAmount.ToString() + "/" + _maxPlayers.ToString();
-        lobbyManager = manager;
+        manager = _manager;
     }
 
     public void OnClickItem()
     {
-        lobbyManager.JoinRoom(roomName.text);
+        //manager.JoinLobbyWithID(id);
     }
 }

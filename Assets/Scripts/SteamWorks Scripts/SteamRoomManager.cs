@@ -85,7 +85,7 @@ public class SteamRoomManager : MonoBehaviour
         UpdatePlayerList();
     }
 
-    
+
 
     public async void HostLobby()
     {
@@ -97,7 +97,7 @@ public class SteamRoomManager : MonoBehaviour
         if (!ulong.TryParse(inputLobbyID.text, out ulong id)) return;
 
         Lobby[] lobbies = await SteamMatchmaking.LobbyList.WithSlotsAvailable(1).RequestAsync();
-        foreach (Lobby lobby in lobbies) 
+        foreach (Lobby lobby in lobbies)
         {
             if (lobby.Id == id)
             {
@@ -106,6 +106,19 @@ public class SteamRoomManager : MonoBehaviour
             }
         }
     }
+
+    /*public async void JoinLobbyWithID(ulong id)
+    {
+        Lobby[] lobbies = await SteamMatchmaking.LobbyList.WithSlotsAvailable(1).RequestAsync();
+        foreach (Lobby lobby in lobbies)
+        {
+            if (lobby.Id == id)
+            {
+                await lobby.Join();
+                return;
+            }
+        }
+    }*/
 
     [Header("UI")]
     [SerializeField] private GameObject lobbyCreateOrJoinPanel;
@@ -137,7 +150,7 @@ public class SteamRoomManager : MonoBehaviour
         LobbySaver.instance.currentLobby?.Leave();
         LobbySaver.instance.currentLobby = null;
 
-        for(int i = 0; i < playerItemGrid.childCount; i++)
+        for (int i = 0; i < playerItemGrid.childCount; i++)
         {
             Destroy(playerItemGrid.GetChild(i).gameObject);
         }
@@ -147,12 +160,11 @@ public class SteamRoomManager : MonoBehaviour
     }
 
     [SerializeField] private PlayerItem playerItemPrefab;
-    //private List<PlayerItem> playerItems;
     [SerializeField] private Transform playerItemGrid;
     [SerializeField] private GameObject playButton;
-    private async void UpdatePlayerList()
+    private void UpdatePlayerList()
     {
-        foreach(Friend friend in LobbySaver.instance.currentLobby?.Members)
+        foreach (Friend friend in LobbySaver.instance.currentLobby?.Members)
         {
             PlayerItem playerItem = Instantiate(playerItemPrefab, playerItemGrid);
             playerItem.SetPlayerInfo(friend.Name);
@@ -162,7 +174,33 @@ public class SteamRoomManager : MonoBehaviour
                 playerItem.SetColor();
                 playButton.SetActive(true);
             }
-            //playerItems.Add(playerItem);
         }
     }
+
+    public void CopyID()
+    {
+        TextEditor editor = new TextEditor();
+        editor.text = LobbySaver.instance.currentLobby?.Id.ToString();
+        editor.SelectAll();
+        editor.Copy();
+    }
+
+    /*[SerializeField] private RoomItem lobbyItemPrefab;
+    [SerializeField] private Transform lobbyItemGrid;
+    private async IAsyncEnumerator<WaitForSeconds> UpdateLobbyList()
+    {
+        while (true)
+        {
+            if (LobbySaver.instance.currentLobby == null)
+            {
+                Lobby[] lobbies = await SteamMatchmaking.LobbyList.WithSlotsAvailable(1).RequestAsync();
+                foreach (Lobby lobby in lobbies)
+                {
+                    RoomItem newLobby = Instantiate(lobbyItemPrefab, lobbyItemGrid);
+                    newLobby.SetRoomInfo(lobby.Id, lobby.MemberCount, lobby.MaxMembers, this);
+                }
+            }
+            yield return new WaitForSeconds(5f);
+        }
+    }*/
 }
