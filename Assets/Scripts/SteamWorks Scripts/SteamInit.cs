@@ -15,6 +15,7 @@ public class SteamInit : MonoBehaviour
                 print("init " + GetName());
             }
             StartCoroutine(CallBacks());
+            DontDestroyOnLoad(gameObject);
         }
         catch (System.Exception e)
         {

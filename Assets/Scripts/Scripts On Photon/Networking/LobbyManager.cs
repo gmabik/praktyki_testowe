@@ -130,7 +130,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         foreach(KeyValuePair<int, Player> pair in PhotonNetwork.CurrentRoom.Players) 
         {
             PlayerItem newItem = Instantiate(playerItemPrefab, playerItemParent);
-            newItem.SetPlayerInfo(pair.Value);
+            //newItem.SetPlayerInfo(pair.Value);
 
             if (pair.Value == PhotonNetwork.MasterClient) newItem.SetColor();
 

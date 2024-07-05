@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
-using Photon.Realtime;
+using Steamworks;
+using Steamworks.Data;
 
 public class PlayerItem : MonoBehaviour
 {
     [SerializeField] private TMP_Text playerNameText;
-    [SerializeField] private Image buttonImage;
-    [SerializeField] private Color color;
+    [SerializeField] private UnityEngine.UI.Image buttonImage;
+    [SerializeField] private UnityEngine.Color color;
 
-    public void SetPlayerInfo(Player _player)
+    public void SetPlayerInfo(string _name)
     {
-        playerNameText.text = _player.NickName;
+        playerNameText.text = _name;
     }
 
     public void SetColor()

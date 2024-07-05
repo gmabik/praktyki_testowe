@@ -132,7 +132,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 41017094}
-  - component: {fileID: 41017095}
   - component: {fileID: 41017096}
   m_Layer: 0
   m_Name: LobbyManager
@@ -156,29 +155,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &41017095
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 41017093}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43b2505eb3775944894fa380c355db47, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lobbyPanel: {fileID: 1335942905}
-  currentRoomPanel: {fileID: 1046016682}
-  roomNameInput: {fileID: 1623073351}
-  createButtonText: {fileID: 1377306742}
-  roomsContent: {fileID: 1581905541}
-  roomPrefab: {fileID: -1155836346884455454, guid: 4439986a0a14c4547aa82be583659e25, type: 3}
-  updateCooldown: 1
-  currentRoomName: {fileID: 1753459651}
-  playerItemPrefab: {fileID: -5192475354155688352, guid: 3060805d4aa9a4140a75580879125450, type: 3}
-  playerItemParent: {fileID: 1055987885}
-  playButton: {fileID: 1828543595}
 --- !u!114 &41017096
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,10 +168,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputLobbyID: {fileID: 1623073351}
+  lobbyIDText: {fileID: 1753459651}
   lobbyCreateOrJoinPanel: {fileID: 1668948816}
   lobbyJoiningPanel: {fileID: 789409557}
   lobbyPanel: {fileID: 1046016682}
   menuPanel: {fileID: 1335942905}
+  playerItemPrefab: {fileID: -5192475354155688352, guid: 3060805d4aa9a4140a75580879125450, type: 3}
+  playerItemGrid: {fileID: 1055987885}
+  playButton: {fileID: 1828543595}
 --- !u!1 &55590629
 GameObject:
   m_ObjectHideFlags: 0
@@ -716,7 +696,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 41017096}
         m_TargetAssemblyTypeName: SteamRoomManager, Assembly-CSharp
-        m_MethodName: OpenChoiceMenu
+        m_MethodName: OpenChoicePanel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2975,7 +2955,7 @@ GameObject:
   - component: {fileID: 1644228825}
   - component: {fileID: 1644228824}
   m_Layer: 5
-  m_Name: Leave Room Button
+  m_Name: Leave Lobby Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3046,9 +3026,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 41017095}
-        m_TargetAssemblyTypeName: LobbyManager, Assembly-CSharp
-        m_MethodName: LeaveRoom
+      - m_Target: {fileID: 41017096}
+        m_TargetAssemblyTypeName: SteamRoomManager, Assembly-CSharp
+        m_MethodName: LeaveLobby
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3348,7 +3328,7 @@ GameObject:
   - component: {fileID: 1753459652}
   - component: {fileID: 1753459651}
   m_Layer: 5
-  m_Name: Room ID
+  m_Name: Lobby ID
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3489,7 +3469,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1828543596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3534,7 +3514,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 41017095}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: LobbyManager, Assembly-CSharp
         m_MethodName: OnClickPlay
         m_Mode: 1

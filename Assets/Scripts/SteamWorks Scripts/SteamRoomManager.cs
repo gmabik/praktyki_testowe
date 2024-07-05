@@ -8,15 +8,17 @@ using Steamworks.Data;
 public class SteamRoomManager : MonoBehaviour
 {
     [SerializeField] private TMP_InputField inputLobbyID;
+    [SerializeField] private TMP_Text lobbyIDText;
 
     private void OnEnable()
     {
         SteamMatchmaking.OnLobbyCreated += SteamMatchmaking_OnLobbyCreated;
         SteamMatchmaking.OnLobbyEntered += SteamMatchmaking_OnLobbyEntered;
         SteamFriends.OnGameLobbyJoinRequested += SteamFriends_OnGameLobbyJoinRequested;
-        /*SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
         SteamMatchmaking.OnLobbyMemberLeave += SteamMatchmaking_OnLobbyMemberLeave;
-        SteamMatchmaking.OnLobbyInvite += SteamMatchmaking_OnLobbyInvite;
+        SteamMatchmaking.OnLobbyMemberJoined += SteamMatchmaking_OnLobbyMemberJoined;
+        /*SteamMatchmaking.OnLobbyInvite += SteamMatchmaking_OnLobbyInvite;
+        
         SteamMatchmaking.OnLobbyGameCreated += SteamMatchmaking_OnLobbyGameCreated;*/
     }
 
@@ -25,9 +27,9 @@ public class SteamRoomManager : MonoBehaviour
         SteamMatchmaking.OnLobbyCreated -= SteamMatchmaking_OnLobbyCreated;
         SteamMatchmaking.OnLobbyEntered -= SteamMatchmaking_OnLobbyEntered;
         SteamFriends.OnGameLobbyJoinRequested -= SteamFriends_OnGameLobbyJoinRequested;
-        /*SteamMatchmaking.OnLobbyMemberJoined -= SteamMatchmaking_OnLobbyMemberJoined;
+        SteamMatchmaking.OnLobbyMemberJoined -= SteamMatchmaking_OnLobbyMemberJoined;
         SteamMatchmaking.OnLobbyMemberLeave -= SteamMatchmaking_OnLobbyMemberLeave;
-        SteamMatchmaking.OnLobbyInvite -= SteamMatchmaking_OnLobbyInvite;
+        /*SteamMatchmaking.OnLobbyInvite -= SteamMatchmaking_OnLobbyInvite;
         SteamMatchmaking.OnLobbyGameCreated -= SteamMatchmaking_OnLobbyGameCreated;*/
     }
 
@@ -52,9 +54,11 @@ public class SteamRoomManager : MonoBehaviour
         _lobby.SetPublic();
         _lobby.SetJoinable(true);
     }
+
     private void SteamMatchmaking_OnLobbyEntered(Lobby _lobby)
     {
         LobbySaver.instance.currentLobby = _lobby;
+        UpdatePlayerList();
         OpenLobbyPanel();
     }
 
@@ -69,18 +73,19 @@ public class SteamRoomManager : MonoBehaviour
     {
         Debug.Log($"Invite from {_friend.Name}");
     }
+    */
 
     private void SteamMatchmaking_OnLobbyMemberLeave(Lobby _lobby, Friend _friend)
     {
-        Debug.Log("member leave");
+        UpdatePlayerList();
     }
 
     private void SteamMatchmaking_OnLobbyMemberJoined(Lobby _lobby, Friend _friend)
     {
-        Debug.Log("member join");
+        UpdatePlayerList();
     }
 
-    */
+    
 
     public async void HostLobby()
     {
@@ -122,13 +127,42 @@ public class SteamRoomManager : MonoBehaviour
 
     public void OpenLobbyPanel()
     {
+        lobbyIDText.text = "ID: " + LobbySaver.instance.currentLobby?.Id.ToString();
         menuPanel.SetActive(false);
         lobbyPanel.SetActive(true);
     }
 
-    public void OpenMenuPanel()
+    public void LeaveLobby()
     {
+        LobbySaver.instance.currentLobby?.Leave();
+        LobbySaver.instance.currentLobby = null;
+
+        for(int i = 0; i < playerItemGrid.childCount; i++)
+        {
+            Destroy(playerItemGrid.GetChild(i).gameObject);
+        }
+
         menuPanel.SetActive(true);
         lobbyPanel.SetActive(false);
+    }
+
+    [SerializeField] private PlayerItem playerItemPrefab;
+    //private List<PlayerItem> playerItems;
+    [SerializeField] private Transform playerItemGrid;
+    [SerializeField] private GameObject playButton;
+    private async void UpdatePlayerList()
+    {
+        foreach(Friend friend in LobbySaver.instance.currentLobby?.Members)
+        {
+            PlayerItem playerItem = Instantiate(playerItemPrefab, playerItemGrid);
+            playerItem.SetPlayerInfo(friend.Name);
+
+            if (LobbySaver.instance.currentLobby?.Owner.Id == friend.Id)
+            {
+                playerItem.SetColor();
+                playButton.SetActive(true);
+            }
+            //playerItems.Add(playerItem);
+        }
     }
 }

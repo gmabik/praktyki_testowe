@@ -6,7 +6,7 @@ using UnityEngine;
 public class LobbySaver : MonoBehaviour
 {
     public static LobbySaver instance;
-    public Lobby currentLobby;
+    public Lobby? currentLobby;
     private void Awake()
     {
         instance = this;
