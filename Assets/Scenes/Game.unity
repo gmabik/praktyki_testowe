@@ -133,7 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5973168}
   - component: {fileID: 5973167}
-  - component: {fileID: 5973169}
+  - component: {fileID: 5973170}
   m_Layer: 0
   m_Name: CursorManager
   m_TagString: Untagged
@@ -170,7 +170,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5973169
+--- !u!114 &5973170
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -179,19 +179,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5973166}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 8
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
+  GlobalObjectIdHash: 3812536431
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &352214683
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,7 +197,6 @@ GameObject:
   - component: {fileID: 352214684}
   - component: {fileID: 352214686}
   - component: {fileID: 352214685}
-  - component: {fileID: 352214687}
   m_Layer: 5
   m_Name: Timer
   m_TagString: Untagged
@@ -328,28 +321,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 352214683}
   m_CullTransparentMesh: 1
---- !u!114 &352214687
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 352214683}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 2
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &458720731
 GameObject:
   m_ObjectHideFlags: 0
@@ -360,7 +331,6 @@ GameObject:
   m_Component:
   - component: {fileID: 458720732}
   - component: {fileID: 458720733}
-  - component: {fileID: 458720734}
   m_Layer: 0
   m_Name: ClickManager
   m_TagString: Untagged
@@ -390,7 +360,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 458720731}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b00b412d13dec304ca98339260ceddff, type: 3}
   m_Name: 
@@ -405,28 +375,6 @@ MonoBehaviour:
   - {fileID: 1986044477}
   - {fileID: 1399549600}
   clickButton: {fileID: 546715302}
---- !u!114 &458720734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 458720731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 4
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &476594556
 GameObject:
   m_ObjectHideFlags: 0
@@ -585,7 +533,6 @@ GameObject:
   - component: {fileID: 546715306}
   - component: {fileID: 546715305}
   - component: {fileID: 546715304}
-  - component: {fileID: 546715307}
   m_Layer: 5
   m_Name: Money Button
   m_TagString: Untagged
@@ -707,28 +654,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 546715302}
   m_CullTransparentMesh: 1
---- !u!114 &546715307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 546715302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 3
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &1015518576
 GameObject:
   m_ObjectHideFlags: 0
@@ -839,7 +764,6 @@ GameObject:
   - component: {fileID: 1305256444}
   - component: {fileID: 1305256446}
   - component: {fileID: 1305256445}
-  - component: {fileID: 1305256447}
   m_Layer: 5
   m_Name: Total Clicks
   m_TagString: Untagged
@@ -966,28 +890,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1305256443}
   m_CullTransparentMesh: 1
---- !u!114 &1305256447
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1305256443}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 1
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &1325983563
 GameObject:
   m_ObjectHideFlags: 0
@@ -1303,7 +1205,8 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 7
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1555748735833479799, guid: ec2347a82297acc49884772576690bd9, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ec2347a82297acc49884772576690bd9, type: 3}
 --- !u!224 &1399549599 stripped
 RectTransform:
@@ -1516,7 +1419,8 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 6
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1555748735833479799, guid: ec2347a82297acc49884772576690bd9, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ec2347a82297acc49884772576690bd9, type: 3}
 --- !u!224 &1986044476 stripped
 RectTransform:
@@ -1646,26 +1550,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1325983564}
     m_Modifications:
-    - target: {fileID: 1555748735833479793, guid: ec2347a82297acc49884772576690bd9, type: 3}
-      propertyPath: m_Type
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1555748735833479793, guid: ec2347a82297acc49884772576690bd9, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: ccacb09581c10594f98efffbf45270c5, type: 3}
-    - target: {fileID: 1555748735833479793, guid: ec2347a82297acc49884772576690bd9, type: 3}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1555748735833479793, guid: ec2347a82297acc49884772576690bd9, type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1555748735833479793, guid: ec2347a82297acc49884772576690bd9, type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1555748735833479796, guid: ec2347a82297acc49884772576690bd9, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1753,18 +1637,6 @@ PrefabInstance:
     - target: {fileID: 1555748735833479797, guid: ec2347a82297acc49884772576690bd9, type: 3}
       propertyPath: m_Name
       value: SkinButton
-      objectReference: {fileID: 0}
-    - target: {fileID: 1555748735833479798, guid: ec2347a82297acc49884772576690bd9, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1555748736905765998}
-    - target: {fileID: 1555748735833479798, guid: ec2347a82297acc49884772576690bd9, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnClick
-      objectReference: {fileID: 0}
-    - target: {fileID: 1555748735833479799, guid: ec2347a82297acc49884772576690bd9, type: 3}
-      propertyPath: sceneViewId
-      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec2347a82297acc49884772576690bd9, type: 3}

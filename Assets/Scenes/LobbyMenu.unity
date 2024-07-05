@@ -173,6 +173,7 @@ MonoBehaviour:
   lobbyJoiningPanel: {fileID: 789409557}
   lobbyPanel: {fileID: 1046016682}
   menuPanel: {fileID: 1335942905}
+  startGameButton: {fileID: 1828543595}
   playerItemPrefab: {fileID: -5192475354155688352, guid: 3060805d4aa9a4140a75580879125450, type: 3}
   playerItemGrid: {fileID: 1055987885}
   playButton: {fileID: 1828543595}
@@ -3571,9 +3572,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: LobbyManager, Assembly-CSharp
-        m_MethodName: OnClickPlay
+      - m_Target: {fileID: 41017096}
+        m_TargetAssemblyTypeName: SteamRoomManager, Assembly-CSharp
+        m_MethodName: StartGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -4,6 +4,9 @@ using TMPro;
 using UnityEngine;
 using Steamworks;
 using Steamworks.Data;
+using UnityEngine.SceneManagement;
+using Unity.Netcode;
+using Netcode.Transports.Facepunch;
 
 public class SteamRoomManager : MonoBehaviour
 {
@@ -53,6 +56,7 @@ public class SteamRoomManager : MonoBehaviour
         }
         _lobby.SetPublic();
         _lobby.SetJoinable(true);
+        NetworkManager.Singleton.StartHost();
     }
 
     private void SteamMatchmaking_OnLobbyEntered(Lobby _lobby)
@@ -60,6 +64,9 @@ public class SteamRoomManager : MonoBehaviour
         LobbySaver.instance.currentLobby = _lobby;
         UpdatePlayerList();
         OpenLobbyPanel();
+        if (NetworkManager.Singleton.IsHost) return;
+        NetworkManager.Singleton.gameObject.GetComponent<FacepunchTransport>().targetSteamId = _lobby.Owner.Id;
+        NetworkManager.Singleton.StartClient();
     }
 
     /*
@@ -125,6 +132,7 @@ public class SteamRoomManager : MonoBehaviour
     [SerializeField] private GameObject lobbyJoiningPanel;
     [SerializeField] private GameObject lobbyPanel;
     [SerializeField] private GameObject menuPanel;
+    [SerializeField] private GameObject startGameButton;
 
     public void OpenJoinRoomPanel()
     {
@@ -141,14 +149,18 @@ public class SteamRoomManager : MonoBehaviour
     public void OpenLobbyPanel()
     {
         lobbyIDText.text = "ID: " + LobbySaver.instance.currentLobby?.Id.ToString();
+        print("ID: " + LobbySaver.instance.currentLobby?.Id.ToString());
         menuPanel.SetActive(false);
         lobbyPanel.SetActive(true);
+        print(NetworkManager.Singleton.IsHost);
+        if (!NetworkManager.Singleton.IsHost) startGameButton.SetActive(false);
     }
 
     public void LeaveLobby()
     {
         LobbySaver.instance.currentLobby?.Leave();
         LobbySaver.instance.currentLobby = null;
+        NetworkManager.Singleton.Shutdown();
 
         for (int i = 0; i < playerItemGrid.childCount; i++)
         {
@@ -166,6 +178,7 @@ public class SteamRoomManager : MonoBehaviour
     {
         foreach (Friend friend in LobbySaver.instance.currentLobby?.Members)
         {
+            print(friend.Name);
             PlayerItem playerItem = Instantiate(playerItemPrefab, playerItemGrid);
             playerItem.SetPlayerInfo(friend.Name);
 
@@ -203,4 +216,9 @@ public class SteamRoomManager : MonoBehaviour
             yield return new WaitForSeconds(5f);
         }
     }*/
+
+    public void StartGame()
+    {
+        NetworkManager.Singleton.SceneManager.LoadScene("Game", LoadSceneMode.Single);
+    }
 }
