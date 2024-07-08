@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
-using System;
 
 public class CursorManager : NetworkBehaviour
 {
@@ -25,13 +23,25 @@ public class CursorManager : NetworkBehaviour
 
     private void SceneLoaded(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
     {
-        if(IsHost && sceneName == "Game")
+        if (IsHost && sceneName == "Game")
         {
-            foreach(ulong id in clientsCompleted)
+            foreach (ulong id in clientsCompleted)
             {
-                GameObject cursor = Instantiate(CursorPrefab, canvas);
+                GameObject cursor = Instantiate(CursorPrefab);
                 cursor.GetComponent<NetworkObject>().SpawnAsPlayerObject(id, true);
+
+                var cursorNetworkObject = cursor.GetComponent<NetworkObject>();
+                ParentToCanvasServerRpc(cursorNetworkObject);
             }
+        }
+    }
+
+    [ServerRpc]
+    public void ParentToCanvasServerRpc(NetworkObjectReference cursorReference)
+    {
+        if (cursorReference.TryGet(out NetworkObject cursor))
+        {
+            cursor.transform.SetParent(canvas);
         }
     }
 }
