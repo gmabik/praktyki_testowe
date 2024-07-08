@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Steamworks;
+using UnityEngine.SceneManagement;
 
 public class SteamInit : MonoBehaviour
 {
+    private bool isConnected = false;
     private void Start()
     {
         try
@@ -16,11 +18,14 @@ public class SteamInit : MonoBehaviour
             }
             StartCoroutine(CallBacks());
             DontDestroyOnLoad(gameObject);
+            isConnected = true;
         }
         catch (System.Exception e)
         {
             Debug.LogException(e);
+            isConnected = false;
         }
+        Debug.LogError("isConnected: " + isConnected);
     }
 
     private string GetName()
@@ -33,6 +38,11 @@ public class SteamInit : MonoBehaviour
             SteamClient.RunCallbacks();
             yield return new WaitForSeconds(0.05f);
         }
+    }
+
+    public void OnClick()
+    {
+        if(isConnected) SceneManager.LoadScene("LobbyMenu");
     }
 
     private void OnApplicationQuit()
