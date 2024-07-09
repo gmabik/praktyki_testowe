@@ -17,8 +17,8 @@ public class SkinScript : MonoBehaviour
         image.color = Color.black;
     }
 
-    [ServerRpc]
-    public void Unlock()
+    [Rpc(SendTo.Everyone)]
+    public void UnlockRpc()
     {
         isUnlocked = true;
         image.color = Color.white;
@@ -29,7 +29,7 @@ public class SkinScript : MonoBehaviour
         if(isUnlocked) SetSkinServerRpc();
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Everyone)]
     private void SetSkinServerRpc()
     {
         manager.clickButton.GetComponent<Image>().sprite = image.sprite;

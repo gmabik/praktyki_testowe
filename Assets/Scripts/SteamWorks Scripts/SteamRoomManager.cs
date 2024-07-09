@@ -93,7 +93,6 @@ public class SteamRoomManager : MonoBehaviour
     }
 
 
-
     public async void HostLobby()
     {
         await SteamMatchmaking.CreateLobbyAsync(4);
@@ -176,6 +175,11 @@ public class SteamRoomManager : MonoBehaviour
     [SerializeField] private GameObject playButton;
     private void UpdatePlayerList()
     {
+        for (int i = 0; i < playerItemGrid.childCount; i++)
+        {
+            Destroy(playerItemGrid.GetChild(i).gameObject);
+        }
+
         foreach (Friend friend in LobbySaver.instance.currentLobby?.Members)
         {
             print(friend.Name);
