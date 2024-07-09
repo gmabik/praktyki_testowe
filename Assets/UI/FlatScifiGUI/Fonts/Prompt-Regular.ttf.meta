@@ -1,0 +1,29 @@
+fileFormatVersion: 2
+guid: 2f9fd0bd14ec08e499d58582d74bd8a6
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Prompt
+  fontNames:
+  - Prompt
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 190783
+  packageName: Flat Sci-Fi Themed GUI - over 700 PNG files!
+  packageVersion: 1.0
+  assetPath: Assets/Honeti/FlatScifiGUI/Fonts/Prompt-Regular.ttf
+  uploadId: 423062
