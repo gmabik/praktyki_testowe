@@ -31,13 +31,13 @@ public class CursorManager : NetworkBehaviour
                 cursor.GetComponent<NetworkObject>().SpawnAsPlayerObject(id, true);
 
                 var cursorNetworkObject = cursor.GetComponent<NetworkObject>();
-                ParentToCanvasServerRpc(cursorNetworkObject);
+                ParentToCanvasRpc(cursorNetworkObject);
             }
         }
     }
 
-    [ServerRpc]
-    public void ParentToCanvasServerRpc(NetworkObjectReference cursorReference)
+    [Rpc(SendTo.Everyone)]
+    public void ParentToCanvasRpc(NetworkObjectReference cursorReference)
     {
         if (cursorReference.TryGet(out NetworkObject cursor))
         {

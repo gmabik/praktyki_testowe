@@ -4,15 +4,17 @@ using UnityEngine;
 using UnityEngine.UI;
 using Unity.Netcode;
 
-public class SkinScript : MonoBehaviour
+public class SkinScript : NetworkBehaviour
 {
     public bool isUnlocked { get; private set; }
     private Image image;
-    public ClickManager manager;
+    public SkinsManager manager;
+    public SkinSO skinData;
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
         image = GetComponent<Image>();
+        image.sprite = skinData.sprite;
         isUnlocked = false;
         image.color = Color.black;
     }
@@ -26,15 +28,6 @@ public class SkinScript : MonoBehaviour
 
     public void OnClick()
     {
-        if(isUnlocked) SetSkinRpc(manager.clickButton);
-    }
-
-    [Rpc(SendTo.Everyone)]
-    public void SetSkinRpc(NetworkObjectReference clickButtonReference)
-    {
-        if (clickButtonReference.TryGet(out NetworkObject clickButton))
-        {
-            clickButton.GetComponent<Image>().sprite = image.sprite;
-        }
+        if (isUnlocked) manager.SpawnNewSkinRpc(skinData.model.Prefab);
     }
 }

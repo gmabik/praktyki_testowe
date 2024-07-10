@@ -19,10 +19,6 @@ public class ClickManager : NetworkBehaviour
     {
         timeForNextSkin /= LobbySaver.instance.currentLobby.Value.MemberCount;
         timeLeft = timeForNextSkin;
-        foreach(SkinScript script in skins)
-        {
-            script.manager = this;
-        }
     }
 
     private void Update()
@@ -55,15 +51,8 @@ public class ClickManager : NetworkBehaviour
             if (IsHost)
             {
                 randomSkinNum = Random.Range(0, skins.Count * 10);
-                UnlockSkinRpc(randomSkinNum % skins.Count);
+                skins[randomSkinNum % skins.Count].UnlockRpc();
             }
         }
-    }
-
-    [Rpc(SendTo.Everyone)]
-    private void UnlockSkinRpc(int random)
-    {
-        print(random);
-        skins[random].UnlockRpc();
     }
 }
