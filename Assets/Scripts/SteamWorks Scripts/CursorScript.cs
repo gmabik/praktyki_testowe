@@ -29,12 +29,11 @@ public class CursorScript : NetworkBehaviour
 
     private void Update()
     {
-        Vector2 newPos = Vector2.one;
         if (IsOwner)
         {
-            newPos = (Vector2)Input.mousePosition / transform.parent.GetComponent<Canvas>().scaleFactor;
+            Vector2 newPos = (Vector2)Input.mousePosition / transform.parent.GetComponent<Canvas>().scaleFactor;
+            UpdatePosRpc(newPos);
         }
-        UpdatePosRpc(newPos);
     }
 
     [Rpc(SendTo.Everyone)]

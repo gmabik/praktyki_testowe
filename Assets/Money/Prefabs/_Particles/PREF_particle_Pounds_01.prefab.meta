@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b868a3c9e7573494083bee4e9488efe1
+timeCreated: 1453290089
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54213
+  packageName: Money
+  packageVersion: 1.0
+  assetPath: Assets/Money/Prefabs/_Particles/PREF_particle_Pounds_01.prefab
+  uploadId: 98941

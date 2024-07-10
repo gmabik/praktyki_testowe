@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8c1c47bece55c1c45aaf07e0d897e5c5
+timeCreated: 1453260970
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54213
+  packageName: Money
+  packageVersion: 1.0
+  assetPath: Assets/Money/Prefabs/Yuan/PREF_money_Yuan_02.prefab
+  uploadId: 98941

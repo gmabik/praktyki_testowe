@@ -26,12 +26,15 @@ public class SkinScript : MonoBehaviour
 
     public void OnClick()
     {
-        if(isUnlocked) SetSkinServerRpc();
+        if(isUnlocked) SetSkinRpc(manager.clickButton);
     }
 
     [Rpc(SendTo.Everyone)]
-    private void SetSkinServerRpc()
+    public void SetSkinRpc(NetworkObjectReference clickButtonReference)
     {
-        manager.clickButton.GetComponent<Image>().sprite = image.sprite;
+        if (clickButtonReference.TryGet(out NetworkObject clickButton))
+        {
+            clickButton.GetComponent<Image>().sprite = image.sprite;
+        }
     }
 }

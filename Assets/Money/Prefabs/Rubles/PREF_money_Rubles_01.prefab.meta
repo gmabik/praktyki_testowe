@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3cbaf5f83341a4e48936f12876ef6b8a
+timeCreated: 1453260507
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54213
+  packageName: Money
+  packageVersion: 1.0
+  assetPath: Assets/Money/Prefabs/Rubles/PREF_money_Rubles_01.prefab
+  uploadId: 98941

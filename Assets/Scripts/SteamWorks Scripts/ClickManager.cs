@@ -54,8 +54,8 @@ public class ClickManager : NetworkBehaviour
             int randomSkinNum = 0;
             if (IsHost)
             {
-                randomSkinNum = Random.Range(0, skins.Count);
-                UnlockSkinRpc(randomSkinNum);
+                randomSkinNum = Random.Range(0, skins.Count * 10);
+                UnlockSkinRpc(randomSkinNum % skins.Count);
             }
         }
     }

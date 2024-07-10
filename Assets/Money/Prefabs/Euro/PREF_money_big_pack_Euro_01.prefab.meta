@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8074ca7da3f8dd041970eea867260134
+timeCreated: 1453259791
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54213
+  packageName: Money
+  packageVersion: 1.0
+  assetPath: Assets/Money/Prefabs/Euro/PREF_money_big_pack_Euro_01.prefab
+  uploadId: 98941

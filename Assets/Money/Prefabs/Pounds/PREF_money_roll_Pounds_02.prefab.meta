@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 24bd9a38db6a6a845b9298a6fc76c18a
+timeCreated: 1453260338
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54213
+  packageName: Money
+  packageVersion: 1.0
+  assetPath: Assets/Money/Prefabs/Pounds/PREF_money_roll_Pounds_02.prefab
+  uploadId: 98941

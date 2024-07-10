@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fcc08bfff03461b4886988d5c5d2cb82
+timeCreated: 1453252693
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54213
+  packageName: Money
+  packageVersion: 1.0
+  assetPath: Assets/Money/Prefabs/Dollars/PREF_money_Dollars_00.prefab
+  uploadId: 98941

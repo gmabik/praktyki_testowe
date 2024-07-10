@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3863e7a7d89d20d4d883482f3178d832
+timeCreated: 1453250316
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54213
+  packageName: Money
+  packageVersion: 1.0
+  assetPath: Assets/Money/Models/Materials/MAT_money_Rubles_01.mat
+  uploadId: 98941

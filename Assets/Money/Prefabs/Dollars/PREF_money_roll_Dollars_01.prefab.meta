@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: bf52232a3e4d48848aec8cd2dbde78ba
+timeCreated: 1453252716
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54213
+  packageName: Money
+  packageVersion: 1.0
+  assetPath: Assets/Money/Prefabs/Dollars/PREF_money_roll_Dollars_01.prefab
+  uploadId: 98941

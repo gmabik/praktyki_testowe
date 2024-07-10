@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5d06d49bcd876c042a7259eaa223206b
+timeCreated: 1453255878
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54213
+  packageName: Money
+  packageVersion: 1.0
+  assetPath: Assets/Money/Models/Materials/demo_table.mat
+  uploadId: 98941

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fabe3c57451d38948b63662a0c31afac
+timeCreated: 1453250294
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54213
+  packageName: Money
+  packageVersion: 1.0
+  assetPath: Assets/Money/Models/Materials/MAT_money_Euro_01.mat
+  uploadId: 98941

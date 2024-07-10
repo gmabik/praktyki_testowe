@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0adcab2b413888c4e9e723ecaf0bbb2c
+timeCreated: 1453260338
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54213
+  packageName: Money
+  packageVersion: 1.0
+  assetPath: Assets/Money/Prefabs/Pounds/PREF_money_Pounds_02.prefab
+  uploadId: 98941
