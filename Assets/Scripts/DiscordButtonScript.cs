@@ -6,6 +6,6 @@ public class DiscordButtonScript : MonoBehaviour
 {
     public void OnClick()
     {
-        Application.OpenURL("https://discord.com/");
+        Application.OpenURL("https://discord.gg/s2jf7E5cTR");
     }
 }

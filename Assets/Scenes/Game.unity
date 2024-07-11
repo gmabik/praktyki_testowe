@@ -1075,6 +1075,8 @@ MonoBehaviour:
   skinDatas:
   - {fileID: 11400000, guid: b63289a14b0687c45a623ef1025e9007, type: 2}
   - {fileID: 11400000, guid: d9cfe14d91e6a07468df499d8291536e, type: 2}
+  - {fileID: 11400000, guid: 08c3e9aaecb8a9d48bd498aabc287e76, type: 2}
+  - {fileID: 11400000, guid: 8469e6006a703b94b8fa607abaa4c7b2, type: 2}
   skinItemPrefab: {fileID: 1555748735833479797, guid: ec2347a82297acc49884772576690bd9, type: 3}
   gridParent: {fileID: 1325983564}
   canvas: {fileID: 2054567096}

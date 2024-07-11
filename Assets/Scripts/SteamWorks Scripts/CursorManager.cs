@@ -13,7 +13,7 @@ public class CursorManager : NetworkBehaviour
     private GameObject myCursor;
     private void Start()
     {
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
 
     public override void OnNetworkSpawn()
