@@ -5,23 +5,30 @@ using Unity.Netcode;
 
 public class SkinsManager : NetworkBehaviour
 {
-    [SerializeField] private List<SkinSO> skins;
+    [SerializeField] private List<SkinSO> skinDatas;
     [SerializeField] private GameObject skinItemPrefab;
-    public Transform gridParent;
+    [SerializeField] private Transform gridParent;
+    [SerializeField] private Transform canvas;
     [SerializeField] private GameObject currentSkin;
     [SerializeField] private Transform spawnPos;
+    public List<GameObject> skins;
 
     private void Start()
     {
         if(!IsHost) return;
-        foreach (var skinData in skins)
+        /*gridParent.GetComponent<NetworkObject>().Spawn();
+        gridParent.SetParent(canvas, false);*/
+        foreach (var skinData in skinDatas)
         {
             GameObject skin = Instantiate(skinItemPrefab);
             skin.GetComponent<SkinScript>().skinData = skinData;
+            skin.GetComponent<SkinScript>().manager = this;
             skin.GetComponent<NetworkObject>().Spawn();
-            if (!skin.GetComponent<NetworkObject>().TrySetParent(gridParent, false)) print("couldnt parent");
+            skin.transform.SetParent(gridParent);
+            skins.Add(skin);
             //ParentAndAsignDataRpc(skin.GetComponent<NetworkObject>()/*, skinData*/);
         }
+        gridParent.gameObject.SetActive(false);
     }
 
     [Rpc(SendTo.Everyone)]
@@ -34,13 +41,20 @@ public class SkinsManager : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.Owner)]
+    [Rpc(SendTo.Everyone)]
     public void SpawnNewSkinRpc(NetworkObjectReference _skin)
     {
         if (!_skin.TryGet(out NetworkObject skin)) return;
-        GameObject newSkin = Instantiate(skin.gameObject);
-        newSkin.AddComponent<NetworkObject>().Spawn();
-        currentSkin.GetComponent<NetworkObject>().Despawn(true);
+        /*GameObject newSkin = Instantiate(skin.gameObject);
+        newSkin.AddComponent<NetworkObject>().Spawn();*/
+        skin.transform.position = spawnPos.position;
+        skin.transform.rotation = spawnPos.rotation;
+        skin.transform.localScale = spawnPos.localScale;
+        if (IsHost)
+        {
+            currentSkin.GetComponent<NetworkObject>().Despawn(true);
+            currentSkin = skin.gameObject;
+        }
     }
 
     [Rpc(SendTo.Everyone)]

@@ -28,6 +28,9 @@ public class SkinScript : NetworkBehaviour
 
     public void OnClick()
     {
-        if (isUnlocked) manager.SpawnNewSkinRpc(skinData.model.Prefab);
+        if (!isUnlocked) return;
+        GameObject newSkin = Instantiate(skinData.model.Prefab);
+        newSkin.AddComponent<NetworkObject>().Spawn();
+        manager.SpawnNewSkinRpc(newSkin.GetComponent<NetworkObject>());
     }
 }

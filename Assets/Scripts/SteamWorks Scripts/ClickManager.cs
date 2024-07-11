@@ -12,8 +12,10 @@ public class ClickManager : NetworkBehaviour
     [SerializeField] private float timeForNextSkin;
     [SerializeField] private float timeLeft;
     [SerializeField] private TMP_Text timerText;
-    [SerializeField] private List<SkinScript> skins;
+    //[SerializeField] private List<SkinScript> skins;
     public GameObject clickButton;
+    [SerializeField]
+    private SkinsManager skinManager;
 
     private void Start()
     {
@@ -50,8 +52,8 @@ public class ClickManager : NetworkBehaviour
             int randomSkinNum = 0;
             if (IsHost)
             {
-                randomSkinNum = Random.Range(0, skins.Count * 10);
-                skins[randomSkinNum % skins.Count].UnlockRpc();
+                randomSkinNum = Random.Range(0, skinManager.skins.Count * 10);
+                skinManager.skins[randomSkinNum % skinManager.skins.Count].GetComponent<SkinScript>().UnlockRpc();
             }
         }
     }

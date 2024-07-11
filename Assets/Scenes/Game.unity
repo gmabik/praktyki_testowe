@@ -508,11 +508,8 @@ MonoBehaviour:
   timeForNextSkin: 20
   timeLeft: 0
   timerText: {fileID: 352214685}
-  skins:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   clickButton: {fileID: 546715302}
+  skinManager: {fileID: 1249268036}
 --- !u!114 &458720734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -783,13 +780,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 546715302}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -909,6 +906,27 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 199064, guid: 6737f562be5289746a4aff90a0a9b239, type: 3}
   m_PrefabInstance: {fileID: 720204485}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &720204487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720204486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1077826513
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1015518576
 GameObject:
   m_ObjectHideFlags: 0
@@ -1054,13 +1072,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a4b723a1b472924db448513c5203b2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skins:
+  skinDatas:
   - {fileID: 11400000, guid: b63289a14b0687c45a623ef1025e9007, type: 2}
   - {fileID: 11400000, guid: d9cfe14d91e6a07468df499d8291536e, type: 2}
   skinItemPrefab: {fileID: 1555748735833479797, guid: ec2347a82297acc49884772576690bd9, type: 3}
   gridParent: {fileID: 1325983564}
+  canvas: {fileID: 2054567096}
   currentSkin: {fileID: 720204486}
   spawnPos: {fileID: 1476686061}
+  skins: []
 --- !u!4 &1249268037
 Transform:
   m_ObjectHideFlags: 0
@@ -1232,7 +1252,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1325983564
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1443,14 +1463,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1476686060}
-  m_LocalRotation: {x: 0.49999997, y: 0.49999997, z: -0.49999997, w: -0.49999997}
-  m_LocalPosition: {x: -2.5, y: 1, z: -5.5}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 1, z: -5.5}
   m_LocalScale: {x: 12, y: 12, z: 12}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1 &1580724198
 GameObject:
   m_ObjectHideFlags: 0
