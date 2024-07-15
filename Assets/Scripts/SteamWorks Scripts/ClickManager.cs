@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Netcode;
+using DG.Tweening;
 
 public class ClickManager : NetworkBehaviour
 {
@@ -12,7 +13,6 @@ public class ClickManager : NetworkBehaviour
     [SerializeField] private float timeForNextSkin;
     [SerializeField] private float timeLeft;
     [SerializeField] private TMP_Text timerText;
-    //[SerializeField] private List<SkinScript> skins;
     public GameObject clickButton;
     [SerializeField]
     private SkinsManager skinManager;
@@ -41,6 +41,8 @@ public class ClickManager : NetworkBehaviour
     {
         clickCount++;
         clickCountText.text = clickCount.ToString();
+
+        skinManager.ClickAnim();
     }
 
     [Rpc(SendTo.Everyone)]
@@ -52,8 +54,8 @@ public class ClickManager : NetworkBehaviour
             int randomSkinNum = 0;
             if (IsHost)
             {
-                randomSkinNum = Random.Range(0, skinManager.skins.Count * 10);
-                skinManager.skins[randomSkinNum % skinManager.skins.Count].GetComponent<SkinScript>().UnlockRpc();
+                randomSkinNum = Random.Range(0, skinManager.skinButtons.Count * 10);
+                skinManager.skinButtons[randomSkinNum % skinManager.skinButtons.Count].GetComponent<SkinScript>().UnlockRpc();
             }
         }
     }

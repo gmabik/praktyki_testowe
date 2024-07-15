@@ -11,7 +11,8 @@ public class SkinScript : NetworkBehaviour
     public SkinsManager manager;
     public SkinSO skinData;
 
-    public override void OnNetworkSpawn()
+    [Rpc(SendTo.Everyone)]
+    public void SetDataRpc()
     {
         image = GetComponent<Image>();
         image.sprite = skinData.sprite;
@@ -31,6 +32,6 @@ public class SkinScript : NetworkBehaviour
         if (!isUnlocked) return;
         GameObject newSkin = Instantiate(skinData.model.Prefab);
         newSkin.AddComponent<NetworkObject>().Spawn();
-        manager.SpawnNewSkinRpc(newSkin.GetComponent<NetworkObject>());
+        manager.NewSkinSetTransformRpc(newSkin.GetComponent<NetworkObject>());
     }
 }
