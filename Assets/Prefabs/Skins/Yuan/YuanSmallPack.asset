@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   model:
     Override: 0
-    Prefab: {fileID: 128180, guid: 0d05d8ae35ce9c34388782403b5a138f, type: 3}
+    Prefab: {fileID: 128180, guid: 8e5fb67c8eb486142b7e3436d3beee7a, type: 3}
     SourcePrefabToOverride: {fileID: 0}
     SourceHashToOverride: 0
     OverridingTargetPrefab: {fileID: 0}
-  sprite: {fileID: 21300000, guid: af83e1583e5c24945a8fa6f87ee0e172, type: 3}
+  sprite: {fileID: 21300000, guid: 3da9d24707354fc44ade075131af9791, type: 3}
