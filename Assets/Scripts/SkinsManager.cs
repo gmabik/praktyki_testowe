@@ -72,8 +72,8 @@ public class SkinsManager : NetworkBehaviour
     {
         this.StopAllCoroutines();
         currentSkin.transform.DOComplete();
-        //currentSkin.transform.DOShakeRotation(0.5f, 10f, 3);
-        StartCoroutine(PlayClickAnim());
+        currentSkin.transform.DOShakeRotation(0.5f, 10f, 3);
+        //StartCoroutine(PlayClickAnim());
     }
 
     private IEnumerator PlayClickAnim()
