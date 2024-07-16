@@ -15,7 +15,14 @@ public class SkinScript : NetworkBehaviour
     public void SetDataRpc()
     {
         image = GetComponent<Image>();
-        image.sprite = skinData.sprite;
+        try
+        {
+            image.sprite = skinData.sprite;
+                }
+        catch(System.Exception e)
+        {
+            NetworkLog.LogError("skin data is null");
+        }
         isUnlocked = false;
         image.color = Color.black;
     }
@@ -30,6 +37,12 @@ public class SkinScript : NetworkBehaviour
     public void OnClick()
     {
         if (!isUnlocked) return;
+        SpawnNewSkinRpc();
+    }
+
+    [Rpc(SendTo.Owner)]
+    public void SpawnNewSkinRpc()
+    {
         GameObject newSkin = Instantiate(skinData.model.Prefab);
         newSkin.AddComponent<NetworkObject>().Spawn();
         manager.NewSkinSetTransformRpc(newSkin.GetComponent<NetworkObject>());

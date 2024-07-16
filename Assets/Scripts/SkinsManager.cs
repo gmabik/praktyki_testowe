@@ -39,6 +39,7 @@ public class SkinsManager : NetworkBehaviour
             skin.GetComponent<SkinScript>().manager = this;
             skin.GetComponent<SkinScript>().SetDataRpc();
         }
+        else NetworkLog.LogError("skin reference is null or dont have network object");
     }
 
     [Rpc(SendTo.Everyone)]
