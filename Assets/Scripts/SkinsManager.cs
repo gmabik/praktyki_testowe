@@ -11,61 +11,41 @@ public class SkinsManager : NetworkBehaviour
     [SerializeField] private Transform canvas;
     public GameObject currentSkin;
     [SerializeField] private Transform spawnPos;
-    [SerializeField] private List<SkinSO> skinDatas;
+    public List<SkinSO> skinDatas;
     public List<GameObject> skinButtons;
 
     private void Start()
     {
         gridParent.parent.parent.gameObject.SetActive(false);
-        if (!IsHost) return;
-        /*gridParent.GetComponent<NetworkObject>().Spawn();
-        gridParent.SetParent(canvas, false);*/
         for (int i = 0; i < skinDatas.Count; i++)
         {
             GameObject skin = Instantiate(skinItemPrefab);
-            skin.GetComponent<NetworkObject>().Spawn();
             skin.transform.SetParent(gridParent);
             skinButtons.Add(skin);
-            AsignDataRpc(skin.GetComponent<NetworkObject>(), i);
-        }
-    }
-
-    [Rpc(SendTo.Everyone)]
-    public void AsignDataRpc(NetworkObjectReference skinReference, int i)
-    {
-        if (skinReference.TryGet(out NetworkObject skin))
-        {
-            skin.GetComponent<SkinScript>().skinData = skinDatas[i];
+            skin.GetComponent<SkinScript>().skinDataNum = i;
             skin.GetComponent<SkinScript>().manager = this;
-            skin.GetComponent<SkinScript>().SetDataRpc();
+            skin.GetComponent<SkinScript>().OnSpawn();
         }
-        else NetworkLog.LogError("skin reference is null or dont have network object");
+    }
+
+    [Rpc(SendTo.Owner)]
+    public void SpawnNewSkinRpc(int i)
+    {
+        GameObject skin = Instantiate(skinDatas[i].model.Prefab);
+        skin.AddComponent<NetworkObject>().Spawn();
+        if(currentSkin != null) currentSkin.GetComponent<NetworkObject>().Despawn(true);
+        SetNewTransformRpc(skin.GetComponent<NetworkObject>());
     }
 
     [Rpc(SendTo.Everyone)]
-    public void NewSkinSetTransformRpc(NetworkObjectReference _skin)
+    public void SetNewTransformRpc(NetworkObjectReference _skin)
     {
-        if (!_skin.TryGet(out NetworkObject skin)) return;
-        /*GameObject newSkin = Instantiate(skin.gameObject);
-        newSkin.AddComponent<NetworkObject>().Spawn();*/
-        skin.transform.position = spawnPos.position;
-        skin.transform.rotation = spawnPos.rotation;
-        skin.transform.localScale = spawnPos.localScale;
-        if (IsHost)
+        if(_skin.TryGet(out NetworkObject skin))
         {
-            currentSkin.GetComponent<NetworkObject>().Despawn(true);
-        }
-        currentSkin = skin.gameObject;
-    }
-
-    [Rpc(SendTo.Everyone)]
-    public void SetPosForNewSkinRpc(NetworkObjectReference _newSkin)
-    {
-        if (_newSkin.TryGet(out NetworkObject newSkin))
-        {
-            newSkin.transform.position = spawnPos.position;
-            newSkin.transform.eulerAngles = spawnPos.eulerAngles;
-            newSkin.transform.localScale = spawnPos.localScale;
+            skin.transform.position = spawnPos.position;
+            skin.transform.rotation = spawnPos.rotation;
+            skin.transform.localScale = spawnPos.localScale;
+            currentSkin = skin.gameObject;
         }
     }
 

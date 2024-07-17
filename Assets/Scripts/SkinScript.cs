@@ -4,31 +4,24 @@ using UnityEngine;
 using UnityEngine.UI;
 using Unity.Netcode;
 
-public class SkinScript : NetworkBehaviour
+public class SkinScript : MonoBehaviour
 {
     public bool isUnlocked { get; private set; }
     private Image image;
     public SkinsManager manager;
+    public int skinDataNum;
     public SkinSO skinData;
 
-    [Rpc(SendTo.Everyone)]
-    public void SetDataRpc()
+    public void OnSpawn()
     {
+        skinData = manager.skinDatas[skinDataNum];
         image = GetComponent<Image>();
-        try
-        {
-            image.sprite = skinData.sprite;
-                }
-        catch(System.Exception e)
-        {
-            NetworkLog.LogError("skin data is null");
-        }
+        image.sprite = skinData.sprite;
         isUnlocked = false;
         image.color = Color.black;
     }
 
-    [Rpc(SendTo.Everyone)]
-    public void UnlockRpc()
+    public void Unlock()
     {
         isUnlocked = true;
         image.color = Color.white;
@@ -37,14 +30,6 @@ public class SkinScript : NetworkBehaviour
     public void OnClick()
     {
         if (!isUnlocked) return;
-        SpawnNewSkinRpc();
-    }
-
-    [Rpc(SendTo.Owner)]
-    public void SpawnNewSkinRpc()
-    {
-        GameObject newSkin = Instantiate(skinData.model.Prefab);
-        newSkin.AddComponent<NetworkObject>().Spawn();
-        manager.NewSkinSetTransformRpc(newSkin.GetComponent<NetworkObject>());
+        manager.SpawnNewSkinRpc(skinDataNum);
     }
 }

@@ -55,8 +55,14 @@ public class ClickManager : NetworkBehaviour
             if (IsHost)
             {
                 randomSkinNum = Random.Range(0, skinManager.skinButtons.Count * 10);
-                skinManager.skinButtons[randomSkinNum % skinManager.skinButtons.Count].GetComponent<SkinScript>().UnlockRpc();
+                UnlockRpc(randomSkinNum % skinManager.skinButtons.Count);
             }
         }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void UnlockRpc(int num)
+    {
+        skinManager.skinButtons[num].GetComponent<SkinScript>().Unlock();
     }
 }

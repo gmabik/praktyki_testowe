@@ -1162,6 +1162,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PREF_money_big_pack_Dollars_01
       objectReference: {fileID: 0}
+    - target: {fileID: 199064, guid: 6737f562be5289746a4aff90a0a9b239, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 424234, guid: 6737f562be5289746a4aff90a0a9b239, type: 3}
       propertyPath: m_RootOrder
       value: 8
