@@ -4,20 +4,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using Unity.Netcode;
 
-public class SkinScript : MonoBehaviour
+public class MaterialScript : MonoBehaviour
 {
     public bool isUnlocked { get; private set; }
     private Image image;
     public SkinsManager manager;
-    public int skinDataNum;
-    public SkinSO skinData;
+    public int matDataNum;
+    public MaterialSO matData;
 
     public void OnSpawn()
     {
-        skinData = manager.skinDatas[skinDataNum];
+        matData = manager.matDatas[matDataNum];
         image = GetComponent<Image>();
-        image.sprite = skinData.sprite;
-        isUnlocked = true;
+        image.sprite = matData.sprite;
+        isUnlocked = false;
+        image.color = Color.black;
     }
 
     public void Unlock()
@@ -29,6 +30,7 @@ public class SkinScript : MonoBehaviour
     public void OnClick()
     {
         if (!isUnlocked) return;
-        manager.SpawnNewSkinRpc(skinDataNum);
+        manager.currentMat = matData.mat;
+        manager.SetMaterialRpc();
     }
 }

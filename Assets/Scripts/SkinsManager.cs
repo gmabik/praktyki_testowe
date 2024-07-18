@@ -7,25 +7,46 @@ using DG.Tweening;
 public class SkinsManager : NetworkBehaviour
 {
     [SerializeField] private GameObject skinItemPrefab;
-    [SerializeField] private Transform gridParent;
+    [SerializeField] private GameObject matItemPrefab;
+    [SerializeField] private Transform matGridParent;
+    [SerializeField] private Transform skinGridParent;
     [SerializeField] private Transform canvas;
     public GameObject currentSkin;
+    public Material currentMat;
     [SerializeField] private Transform spawnPos;
     public List<SkinSO> skinDatas;
+    public List<MaterialSO> matDatas;
     public List<GameObject> skinButtons;
+    public List<GameObject> matButtons;
 
     private void Start()
     {
-        gridParent.parent.parent.gameObject.SetActive(false);
+        matGridParent.parent.parent.gameObject.SetActive(false);
+        skinGridParent.parent.parent.gameObject.SetActive(false);
+        for (int i = 0; i < matDatas.Count; i++)
+        {
+            GameObject mat = Instantiate(matItemPrefab);
+            mat.transform.SetParent(matGridParent);
+            matButtons.Add(mat);
+            mat.GetComponent<MaterialScript>().matDataNum = i;
+            mat.GetComponent<MaterialScript>().manager = this;
+            mat.GetComponent<MaterialScript>().OnSpawn();
+        }
         for (int i = 0; i < skinDatas.Count; i++)
         {
             GameObject skin = Instantiate(skinItemPrefab);
-            skin.transform.SetParent(gridParent);
+            skin.transform.SetParent(skinGridParent);
             skinButtons.Add(skin);
             skin.GetComponent<SkinScript>().skinDataNum = i;
             skin.GetComponent<SkinScript>().manager = this;
             skin.GetComponent<SkinScript>().OnSpawn();
         }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    public void SetMaterialRpc()
+    {
+        currentSkin.GetComponent<MeshRenderer>().material = currentMat;
     }
 
     [Rpc(SendTo.Owner)]
@@ -46,6 +67,7 @@ public class SkinsManager : NetworkBehaviour
             skin.transform.rotation = spawnPos.rotation;
             skin.transform.localScale = spawnPos.localScale;
             currentSkin = skin.gameObject;
+            SetMaterialRpc();
         }
     }
 
@@ -68,18 +90,33 @@ public class SkinsManager : NetworkBehaviour
     }
 
     #region
+    private bool isMatPanelOpened;
+    public void OpenCloseMatPanel()
+    {
+        if (!isMatPanelOpened)
+        {
+            isMatPanelOpened = true;
+            matGridParent.parent.parent.gameObject.SetActive(true);
+        }
+        else
+        {
+            isMatPanelOpened = false;
+            matGridParent.parent.parent.gameObject.SetActive(false);
+        }
+    }
+
     private bool isSkinPanelOpened;
-    public void OnClick()
+    public void OpenCloseSkinPanel()
     {
         if (!isSkinPanelOpened)
         {
             isSkinPanelOpened = true;
-            gridParent.parent.parent.gameObject.SetActive(true);
+            skinGridParent.parent.parent.gameObject.SetActive(true);
         }
         else
         {
             isSkinPanelOpened = false;
-            gridParent.parent.parent.gameObject.SetActive(false);
+            skinGridParent.parent.parent.gameObject.SetActive(false);
         }
     }
     #endregion

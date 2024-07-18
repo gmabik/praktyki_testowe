@@ -51,11 +51,11 @@ public class ClickManager : NetworkBehaviour
         if (timeLeft <= 0)
         {
             timeLeft = timeForNextSkin;
-            int randomSkinNum = 0;
+            int randomMatNum = 0;
             if (IsHost)
             {
-                randomSkinNum = Random.Range(0, skinManager.skinButtons.Count * 10);
-                UnlockRpc(randomSkinNum % skinManager.skinButtons.Count);
+                randomMatNum = Random.Range(0, skinManager.matButtons.Count * 10);
+                UnlockRpc(randomMatNum % skinManager.matButtons.Count);
             }
         }
     }
@@ -63,6 +63,6 @@ public class ClickManager : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     private void UnlockRpc(int num)
     {
-        skinManager.skinButtons[num].GetComponent<SkinScript>().Unlock();
+        skinManager.matButtons[num].GetComponent<MaterialScript>().Unlock();
     }
 }

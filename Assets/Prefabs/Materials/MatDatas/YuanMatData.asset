@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 299b2072e36280c43a90cbc18ef9762f, type: 3}
+  m_Name: YuanMatData
+  m_EditorClassIdentifier: 
+  mat: {fileID: 2100000, guid: c7c31b3fe532ab846ad29032fb885697, type: 2}
+  sprite: {fileID: 21300000, guid: 00ebc8515bdf94e4ebf1d4087cb2b5c4, type: 3}
