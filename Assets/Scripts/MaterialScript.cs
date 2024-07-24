@@ -17,8 +17,12 @@ public class MaterialScript : MonoBehaviour
         matData = manager.matDatas[matDataNum];
         image = GetComponent<Image>();
         image.sprite = matData.sprite;
-        isUnlocked = false;
-        image.color = Color.black;
+        if(matDataNum != 0)
+        {
+            isUnlocked = false;
+            image.color = Color.black;
+        }
+        else isUnlocked = true;
     }
 
     public void Unlock()

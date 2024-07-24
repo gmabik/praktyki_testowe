@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using Steamworks;
 using DG.Tweening;
+using System.Linq;
+using Steamworks.Data;
 
 public class SkinsManager : NetworkBehaviour
 {
@@ -19,8 +22,12 @@ public class SkinsManager : NetworkBehaviour
     public List<GameObject> skinButtons;
     public List<GameObject> matButtons;
 
-    private void Start()
+
+
+    private async void Start()
     {
+        GrantStarterSkin();
+
         matGridParent.parent.parent.gameObject.SetActive(false);
         skinGridParent.parent.parent.gameObject.SetActive(false);
         for (int i = 0; i < matDatas.Count; i++)
@@ -41,7 +48,34 @@ public class SkinsManager : NetworkBehaviour
             skin.GetComponent<SkinScript>().manager = this;
             skin.GetComponent<SkinScript>().OnSpawn();
         }
+        currentSkin.GetComponent<MeshRenderer>().material = matDatas[0].mat;
+        currentMat = matDatas[0].mat;
     }
+
+    private async void GrantStarterSkin()
+    {
+        InventoryItem[] items = SteamInventory.Items;
+        bool containsStartSkin = false;
+        foreach (InventoryItem item in items)
+        {
+            //await item.ConsumeAsync(1);
+            print(item.DefId.Value + "     " + item.Quantity + "     " + item.IsConsumed);
+            if (item.DefId.Value == 10)
+            {
+                if (containsStartSkin) await item.ConsumeAsync(1);
+                else containsStartSkin = true;
+            }
+    }
+        if (!containsStartSkin)
+        {
+            InventoryDefId id = new InventoryDefId();
+            id.Value = 30;
+            InventoryResult? result = await SteamInventory.TriggerItemDropAsync(id);
+            print(result.Value.ItemCount);
+        }
+    }
+
+
 
     [Rpc(SendTo.Everyone)]
     public void SetMaterialRpc()

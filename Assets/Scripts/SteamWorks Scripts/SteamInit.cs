@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class SteamInit : MonoBehaviour
 {
     private bool isConnected = false;
-    private void Start()
+    private async void Start()
     {
         try
         {
@@ -26,6 +26,8 @@ public class SteamInit : MonoBehaviour
             isConnected = false;
         }
         Debug.LogError("isConnected: " + isConnected);
+        await SteamInventory.GetAllItemsAsync();
+        SteamInventory.LoadItemDefinitions();
     }
 
     private string GetName()
