@@ -21,15 +21,19 @@ public class SkinsManager : NetworkBehaviour
     public List<MaterialSO> matDatas;
     public List<GameObject> skinButtons;
     public List<GameObject> matButtons;
+    [SerializeField] private GameObject redDot;
 
 
+    public Dictionary<int, InventoryDef> defsWithPrices;
 
     private async void Start()
     {
-        GrantStarterSkin();
-
+        //RemoveAllItems();
         matGridParent.parent.parent.gameObject.SetActive(false);
         skinGridParent.parent.parent.gameObject.SetActive(false);
+        await SteamInventory.GetAllItemsAsync();
+        defsWithPrices = ConvertToDict(await SteamInventory.GetDefinitionsWithPricesAsync());
+        GrantStarterSkin();
         for (int i = 0; i < matDatas.Count; i++)
         {
             GameObject mat = Instantiate(matItemPrefab);
@@ -54,28 +58,44 @@ public class SkinsManager : NetworkBehaviour
 
     private async void GrantStarterSkin()
     {
-        InventoryItem[] items = SteamInventory.Items;
-        bool containsStartSkin = false;
-        foreach (InventoryItem item in items)
+        List<InventoryItem> starterSkins = CheckIfHasMat(10);
+        foreach (InventoryItem item in starterSkins)
         {
-            //await item.ConsumeAsync(1);
-            print(item.DefId.Value + "     " + item.Quantity + "     " + item.IsConsumed);
-            if (item.DefId.Value == 10)
+            if (starterSkins.Count > 1)
             {
-                if (containsStartSkin) await item.ConsumeAsync(1);
-                else containsStartSkin = true;
+                await item.ConsumeAsync(1);
+                starterSkins.Remove(item);
             }
-    }
-        if (!containsStartSkin)
+        }
+        if (starterSkins.Count == 0)
         {
-            InventoryDefId id = new InventoryDefId();
-            id.Value = 30;
-            InventoryResult? result = await SteamInventory.TriggerItemDropAsync(id);
-            print(result.Value.ItemCount);
+            GrantItem(30);
         }
     }
 
+    public List<InventoryItem> CheckIfHasMat(int id)
+    {
+        InventoryItem[] items = SteamInventory.Items;
+        if (items == null) return new();
+        List<InventoryItem> skins = new();
+        foreach (InventoryItem item in items)
+        {
+            //await item.ConsumeAsync(1);
+            //print(item.DefId.Value + "     " + item.Quantity + "     " + item.IsConsumed);
+            if (item.DefId.Value == id)
+            {
+                skins.Add(item);
+            }
+        }
+        return skins;
+    }
 
+    public async void GrantItem(int idNum)
+    {
+        InventoryDefId id = new() { Value = idNum };
+        InventoryResult? result = await SteamInventory.TriggerItemDropAsync(id);
+        print(result.Value);
+    }
 
     [Rpc(SendTo.Everyone)]
     public void SetMaterialRpc()
@@ -88,14 +108,14 @@ public class SkinsManager : NetworkBehaviour
     {
         GameObject skin = Instantiate(skinDatas[i].model.Prefab);
         skin.AddComponent<NetworkObject>().Spawn();
-        if(currentSkin != null) currentSkin.GetComponent<NetworkObject>().Despawn(true);
+        if (currentSkin != null) currentSkin.GetComponent<NetworkObject>().Despawn(true);
         SetNewTransformRpc(skin.GetComponent<NetworkObject>());
     }
 
     [Rpc(SendTo.Everyone)]
     public void SetNewTransformRpc(NetworkObjectReference _skin)
     {
-        if(_skin.TryGet(out NetworkObject skin))
+        if (_skin.TryGet(out NetworkObject skin))
         {
             skin.transform.position = spawnPos.position;
             skin.transform.rotation = spawnPos.rotation;
@@ -113,7 +133,7 @@ public class SkinsManager : NetworkBehaviour
         //StartCoroutine(PlayClickAnim());
     }
 
-    private IEnumerator PlayClickAnim()
+    /*private IEnumerator PlayClickAnim()
     {
         Transform skin = currentSkin.transform;
         skin.DORotate(spawnPos.rotation.eulerAngles + new Vector3(5, 0, 0), 0.2f);
@@ -121,7 +141,7 @@ public class SkinsManager : NetworkBehaviour
         skin.DORotate(spawnPos.rotation.eulerAngles - new Vector3(5, 0, 0), 0.4f);
         yield return new WaitForSeconds(0.4f);
         skin.DORotate(spawnPos.rotation.eulerAngles, 0.2f);
-    }
+    }*/
 
     #region
     private bool isMatPanelOpened;
@@ -131,6 +151,8 @@ public class SkinsManager : NetworkBehaviour
         {
             isMatPanelOpened = true;
             matGridParent.parent.parent.gameObject.SetActive(true);
+            if(isSkinPanelOpened) OpenCloseSkinPanel();
+            RedDotSetActive(false);
         }
         else
         {
@@ -146,6 +168,7 @@ public class SkinsManager : NetworkBehaviour
         {
             isSkinPanelOpened = true;
             skinGridParent.parent.parent.gameObject.SetActive(true);
+            if(isMatPanelOpened) OpenCloseMatPanel();
         }
         else
         {
@@ -153,5 +176,28 @@ public class SkinsManager : NetworkBehaviour
             skinGridParent.parent.parent.gameObject.SetActive(false);
         }
     }
+
+    public void RedDotSetActive(bool state)
+        => redDot.SetActive(state);
     #endregion
+
+    public Dictionary<int, InventoryDef> ConvertToDict(InventoryDef[] defs)
+    {
+        Dictionary<int, InventoryDef> dict = new();
+        foreach (InventoryDef def in defs)
+        {
+            dict.Add(def.Id, def);
+        }
+        return dict;
+    }
+
+    private async void RemoveAllItems() //purely for testing
+    {
+        InventoryItem[] items = SteamInventory.Items;
+        if(items == null) return;
+        foreach (InventoryItem item in items)
+        {
+            await item.ConsumeAsync(1);
+        }
+    }
 }

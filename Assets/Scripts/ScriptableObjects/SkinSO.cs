@@ -1,3 +1,4 @@
+using Steamworks;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -8,4 +9,5 @@ public class SkinSO : ScriptableObject
 {
     public NetworkPrefab model;
     public Sprite sprite;
+    public int id;
 }
