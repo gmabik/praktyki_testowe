@@ -19,4 +19,4 @@ MonoBehaviour:
     SourceHashToOverride: 0
     OverridingTargetPrefab: {fileID: 0}
   sprite: {fileID: 21300000, guid: 8d404c923c3990f45b35c01d7e1e6628, type: 3}
-  id: 20
+  id: 29

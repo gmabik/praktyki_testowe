@@ -20,24 +20,35 @@ public class SkinScript : MonoBehaviour
     {
         skinData = manager.skinDatas[skinDataNum];
         manager.defsWithPrices.TryGetValue(skinData.id, out itemDef);
-        print(itemDef == null);
-        print(itemDef.LocalPrice + "       " + itemDef.LocalBasePrice);
+        //print(itemDef.LocalPrice + "       " + itemDef.LocalBasePrice);
         image = GetComponent<Image>();
         image.sprite = skinData.sprite;
-        priceText.text = itemDef.LocalPriceFormatted;
+        StartUnlock();
     }
 
-    public void Unlock()
+    public async void StartUnlock()
     {
-        IsUnlocked = true;
-        image.color = Color.white;
+        await SteamInventory.GetAllItemsAsync();
+        if (manager.CheckIfHasItem(skinData.id).Count > 0)
+        {
+            print("count > 0");
+            priceText.text = "Owned";
+            IsUnlocked = true;
+        }
+        else
+        {
+            priceText.text = itemDef.LocalPriceFormatted;
+            IsUnlocked = false;
+            print("count = 0");
+        }
     }
 
     public void OnClick()
     {
         if (!IsUnlocked)
         {
-
+            manager.gameObject.GetComponent<PurchaseManager>().StartPurchase(itemDef);
+            StartUnlock();
         }
         else manager.SpawnNewSkinRpc(skinDataNum);
     }

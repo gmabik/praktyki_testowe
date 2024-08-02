@@ -8,7 +8,6 @@ using DG.Tweening;
 using Steamworks.Data;
 using Steamworks;
 using System;
-using Palmmedia.ReportGenerator.Core.Common;
 
 public class ClickManager : NetworkBehaviour
 {
@@ -68,21 +67,6 @@ public class ClickManager : NetworkBehaviour
     private void UnlockRpc()
     {
         //skinManager.matButtons[num].GetComponent<MaterialScript>().Unlock();
-        GiveSkin();
-    }
-
-    private async void GiveSkin()
-    {
-        InventoryDefId genID = new() { Value = 31 };
-        InventoryResult? result = await SteamInventory.TriggerItemDropAsync(genID);
-        skinManager.RedDotSetActive(true);
-        InventoryItem[] items = result.Value.GetItems();
-        foreach (InventoryItem item in items)
-        {
-            int id = item.DefId.Value;
-            Debug.LogError(id);
-            int num = id.ToString()[1..].ParseLargeInteger();
-            skinManager.matButtons[num].GetComponent<MaterialScript>().UpdateAmount();
-        }
+        skinManager.GrantItem(31);
     }
 }

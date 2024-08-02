@@ -35,16 +35,22 @@ public class MaterialScript : MonoBehaviour
 
     public void OnClick()
     {
-        if (!IsUnlocked) return;
-        manager.currentMat = matData.mat;
-        manager.SetMaterialRpc();
+        if (!IsUnlocked)
+        {
+            UpdateAmount();
+        }
+        else
+        {
+            manager.currentMat = matData.mat;
+            manager.SetMaterialRpc();
+        }
     }
 
     public async void UpdateAmount()
     {
         await SteamInventory.GetAllItemsAsync();
-        var list = manager.CheckIfHasMat(matData.id);
-        if(currentAmount != list.Count)
+        var list = manager.CheckIfHasItem(matData.id);
+        if (currentAmount != list.Count)
         {
             currentAmount = list.Count;
             UpdateUIAmount();
@@ -53,7 +59,7 @@ public class MaterialScript : MonoBehaviour
 
     private void UpdateUIAmount()
     {
-        if(currentAmount == 0)
+        if (currentAmount == 0)
         {
             IsUnlocked = false;
             image.color = Color.black;

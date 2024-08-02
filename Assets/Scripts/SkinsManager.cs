@@ -6,6 +6,8 @@ using Steamworks;
 using DG.Tweening;
 using System.Linq;
 using Steamworks.Data;
+using System;
+using System.Threading.Tasks;
 
 public class SkinsManager : NetworkBehaviour
 {
@@ -28,12 +30,14 @@ public class SkinsManager : NetworkBehaviour
 
     private async void Start()
     {
-        //RemoveAllItems();
+        //SteamInventory.OnInventoryUpdated += UpdateInventory;
+
         matGridParent.parent.parent.gameObject.SetActive(false);
         skinGridParent.parent.parent.gameObject.SetActive(false);
+
         await SteamInventory.GetAllItemsAsync();
         defsWithPrices = ConvertToDict(await SteamInventory.GetDefinitionsWithPricesAsync());
-        GrantStarterSkin();
+        
         for (int i = 0; i < matDatas.Count; i++)
         {
             GameObject mat = Instantiate(matItemPrefab);
@@ -52,13 +56,18 @@ public class SkinsManager : NetworkBehaviour
             skin.GetComponent<SkinScript>().manager = this;
             skin.GetComponent<SkinScript>().OnSpawn();
         }
+
+        GrantStarterSkin();
+
         currentSkin.GetComponent<MeshRenderer>().material = matDatas[0].mat;
         currentMat = matDatas[0].mat;
+
+        //await RemoveAllItems();
     }
 
     private async void GrantStarterSkin()
     {
-        List<InventoryItem> starterSkins = CheckIfHasMat(10);
+        List<InventoryItem> starterSkins = CheckIfHasItem(10);
         foreach (InventoryItem item in starterSkins)
         {
             if (starterSkins.Count > 1)
@@ -69,11 +78,12 @@ public class SkinsManager : NetworkBehaviour
         }
         if (starterSkins.Count == 0)
         {
+            await SteamInventory.GetAllItemsAsync();
             GrantItem(30);
         }
     }
 
-    public List<InventoryItem> CheckIfHasMat(int id)
+    public List<InventoryItem> CheckIfHasItem(int id)
     {
         InventoryItem[] items = SteamInventory.Items;
         if (items == null) return new();
@@ -92,10 +102,31 @@ public class SkinsManager : NetworkBehaviour
 
     public async void GrantItem(int idNum)
     {
-        InventoryDefId id = new() { Value = idNum };
-        InventoryResult? result = await SteamInventory.TriggerItemDropAsync(id);
-        print(result.Value);
+        InventoryDefId genID = new() { Value = idNum };
+        InventoryResult? result = await SteamInventory.TriggerItemDropAsync(genID);
+        RedDotSetActive(true);
+        InventoryItem[] items = result.Value.GetItems();
+        foreach (InventoryItem item in items)
+        {
+            int id = item.DefId.Value;
+            Debug.LogError(id);
+            int num = Convert.ToInt32(id.ToString()[1..]);
+            matButtons[num].GetComponent<MaterialScript>().UpdateAmount();
+        }
     }
+
+    private void UpdateInventory(InventoryResult result)
+    {
+        foreach (GameObject mat in matButtons)
+        {
+            mat.GetComponent<MaterialScript>().UpdateAmount();
+        }
+        foreach(GameObject skin in skinButtons)
+        {
+            skin.GetComponent<SkinScript>().StartUnlock();
+        }
+    }
+
 
     [Rpc(SendTo.Everyone)]
     public void SetMaterialRpc()
@@ -191,7 +222,7 @@ public class SkinsManager : NetworkBehaviour
         return dict;
     }
 
-    private async void RemoveAllItems() //purely for testing
+    private async Task RemoveAllItems() //purely for testing
     {
         InventoryItem[] items = SteamInventory.Items;
         if(items == null) return;
