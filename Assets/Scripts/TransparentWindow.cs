@@ -35,31 +35,47 @@ public class TransparentWindow : MonoBehaviour
     const uint WS_EX_LAYERED = 0x00080000;
     const uint WS_EX_TRANSPARENT = 0x00000020;
 
-    static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+    static readonly IntPtr HWND_TOPMOST = new(-1);
 
     private IntPtr hwnd;
 
-    private void Start()
+    private bool isTransparent = false;
+    [SerializeField] private GameObject plane;
+    public void OnClick()
     {
-        //MessageBox(new IntPtr(0), "Hello World", "Dialog", 0);
-
-#if !UNITY_EDITOR_
         hwnd = GetActiveWindow();
+#if !UNITY_EDITOR_
+        if (!isTransparent)
+        {
+            plane.SetActive(false); 
+            MARGINS margins = new() { leftWidth = -1 };
+            DwmExtendFrameIntoClientArea(hwnd, ref margins);
 
-        MARGINS margins = new MARGINS {leftWidth = -1 };
-        DwmExtendFrameIntoClientArea(hwnd, ref margins);
+            SetWindowLong(hwnd, GWL_EXSTYLE, WS_EX_LAYERED | WS_EX_TRANSPARENT);
 
-        SetWindowLong(hwnd, GWL_EXSTYLE, WS_EX_LAYERED | WS_EX_TRANSPARENT);
+            SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, 0);
+            isTransparent = true;
+        }
+        else
+        {
+            plane.SetActive(true);
+            MARGINS margins = new() { leftWidth = -1 };
+            DwmExtendFrameIntoClientArea(hwnd, ref margins);
 
-        //SetLayeredWindowAttributes(hwnd, 0, 0, LWA_COLORKEY);
+            SetWindowLong(hwnd, GWL_EXSTYLE, 0);
 
-        SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, 0);
+            SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, 0);
+            isTransparent = false;
+        }
+
 #endif
     }
 
     private void Update()
     {
-        SetClickThrough(!IsPointerOverUI());
+#if !UNITY_EDITOR_
+        if(isTransparent) SetClickThrough(!IsPointerOverUI());
+#endif
     }
 
     private void SetClickThrough(bool isOverlaping)
@@ -82,9 +98,9 @@ public class TransparentWindow : MonoBehaviour
         }
         else
         {
-            PointerEventData pe = new PointerEventData(EventSystem.current);
+            PointerEventData pe = new(EventSystem.current);
             pe.position = Input.mousePosition;
-            List<RaycastResult> hits = new List<RaycastResult>();
+            List<RaycastResult> hits = new();
             EventSystem.current.RaycastAll(pe, hits);
             return hits.Count > 0;
         }

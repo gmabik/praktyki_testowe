@@ -35,8 +35,7 @@ public class SkinsManager : NetworkBehaviour
         matGridParent.parent.parent.gameObject.SetActive(false);
         skinGridParent.parent.parent.gameObject.SetActive(false);
 
-        await SteamInventory.GetAllItemsAsync();
-        defsWithPrices = ConvertToDict(await SteamInventory.GetDefinitionsWithPricesAsync());
+        //await SteamInventory.GetAllItemsAsync();
         
         for (int i = 0; i < matDatas.Count; i++)
         {
@@ -47,6 +46,8 @@ public class SkinsManager : NetworkBehaviour
             mat.GetComponent<MaterialScript>().manager = this;
             mat.GetComponent<MaterialScript>().OnSpawn();
         }
+
+        defsWithPrices = ConvertToDict(await SteamInventory.GetDefinitionsWithPricesAsync());
         for (int i = 0; i < skinDatas.Count; i++)
         {
             GameObject skin = Instantiate(skinItemPrefab);
@@ -114,19 +115,6 @@ public class SkinsManager : NetworkBehaviour
             matButtons[num].GetComponent<MaterialScript>().UpdateAmount();
         }
     }
-
-    private void UpdateInventory(InventoryResult result)
-    {
-        foreach (GameObject mat in matButtons)
-        {
-            mat.GetComponent<MaterialScript>().UpdateAmount();
-        }
-        foreach(GameObject skin in skinButtons)
-        {
-            skin.GetComponent<SkinScript>().StartUnlock();
-        }
-    }
-
 
     [Rpc(SendTo.Everyone)]
     public void SetMaterialRpc()
