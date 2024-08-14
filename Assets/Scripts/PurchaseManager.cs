@@ -14,20 +14,9 @@ public class PurchaseManager : MonoBehaviour
     public InventoryDef item;
     private SkinsManager skinManager;
 
-    public async void Start()
+    private void Start()
     {
         skinManager = gameObject.GetComponent<SkinsManager>();
-        if (skinManager.CheckIfHasItem(20).Count == 0)
-        {
-        InventoryResult? result = await SteamInventory.TriggerItemDropAsync(32);
-        foreach (InventoryItem _item in result.Value.GetItems())
-        {
-            int num = Convert.ToInt32(_item.Def.Id.ToString()[1..]);
-            print(num);
-            skinManager.skinButtons[num].GetComponent<SkinScript>().StartUnlock();
-        }
-
-        }
         //
         // Tell this callback to tell us when something has been purchased
         //
@@ -46,7 +35,7 @@ public class PurchaseManager : MonoBehaviour
     //
     // Called when they want to check out
     //
-    public async Task CheckoutAsync()
+    private async Task CheckoutAsync()
     {
         //ShowPurchaseInProgressScreen();
         /*if (item.LocalPrice == 0)
@@ -66,12 +55,12 @@ public class PurchaseManager : MonoBehaviour
         }
         else
         {*/
-            // This tries to open the steam overlay to commence the checkout
-            var result = await Steamworks.SteamInventory.StartPurchaseAsync(new[] { item});
+        // This tries to open the steam overlay to commence the checkout
+        var result = await Steamworks.SteamInventory.StartPurchaseAsync(new[] { item });
 
-            Debug.Log($"Result: {result.Value.Result}");
-            Debug.Log($"TransID: {result.Value.TransID}");
-            Debug.Log($"OrderID: {result.Value.OrderID}");
+        Debug.Log($"Result: {result.Value.Result}");
+        Debug.Log($"TransID: {result.Value.TransID}");
+        Debug.Log($"OrderID: {result.Value.OrderID}");
         //}
     }
 
@@ -85,7 +74,7 @@ public class PurchaseManager : MonoBehaviour
         if (success)
         {
             int num = Convert.ToInt32(item.Id.ToString()[1..]);
-            skinManager.skinButtons[num].GetComponent<SkinScript>().StartUnlock();
+            skinManager.skinButtons[num].GetComponent<SkinScript>().UpdateUnlockStatus();
         }
         else
         {

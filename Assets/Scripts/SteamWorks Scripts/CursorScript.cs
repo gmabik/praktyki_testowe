@@ -12,7 +12,7 @@ public class CursorScript : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-
+        playerName.raycastTarget = false;
         if (IsOwner)
         {
             SetNameRpc(SteamClient.Name);

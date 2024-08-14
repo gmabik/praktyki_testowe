@@ -28,15 +28,23 @@ public class SkinsManager : NetworkBehaviour
 
     public Dictionary<int, InventoryDef> defsWithPrices;
 
-    private async void Start()
+#pragma warning disable CS1998 // В асинхронном методе отсутствуют операторы await, будет выполнен синхронный метод
+    private async void Awake()
+#pragma warning restore CS1998 // В асинхронном методе отсутствуют операторы await, будет выполнен синхронный метод
     {
+        //await RemoveAllItems();
+    }
+
+    public override async void OnNetworkSpawn()
+    {
+
         //SteamInventory.OnInventoryUpdated += UpdateInventory;
 
         matGridParent.parent.parent.gameObject.SetActive(false);
         skinGridParent.parent.parent.gameObject.SetActive(false);
 
         //await SteamInventory.GetAllItemsAsync();
-        
+
         for (int i = 0; i < matDatas.Count; i++)
         {
             GameObject mat = Instantiate(matItemPrefab);
@@ -47,7 +55,9 @@ public class SkinsManager : NetworkBehaviour
             mat.GetComponent<MaterialScript>().OnSpawn();
         }
 
+        defsWithPrices = new Dictionary<int, InventoryDef>();
         defsWithPrices = ConvertToDict(await SteamInventory.GetDefinitionsWithPricesAsync());
+
         for (int i = 0; i < skinDatas.Count; i++)
         {
             GameObject skin = Instantiate(skinItemPrefab);
@@ -58,17 +68,23 @@ public class SkinsManager : NetworkBehaviour
             skin.GetComponent<SkinScript>().OnSpawn();
         }
 
-        GrantStarterSkin();
+        StartCoroutine(GrantStarterSkins());
 
         currentSkin.GetComponent<MeshRenderer>().material = matDatas[0].mat;
         currentMat = matDatas[0].mat;
-
-        //await RemoveAllItems();
     }
 
-    private async void GrantStarterSkin()
+    private IEnumerator GrantStarterSkins()
     {
-        List<InventoryItem> starterSkins = CheckIfHasItem(10);
+        GrantStarter(10, 30);
+        yield return new WaitForSeconds(2);
+        GrantStarter(20, 32);
+    }
+
+
+    private async void GrantStarter(int itemID, int generatorID)
+    {
+        List<InventoryItem> starterSkins = CheckIfHasItem(itemID);
         foreach (InventoryItem item in starterSkins)
         {
             if (starterSkins.Count > 1)
@@ -79,8 +95,20 @@ public class SkinsManager : NetworkBehaviour
         }
         if (starterSkins.Count == 0)
         {
-            await SteamInventory.GetAllItemsAsync();
-            GrantItem(30);
+            InventoryDefId genID = new() { Value = generatorID };
+            InventoryResult? result = await SteamInventory.TriggerItemDropAsync(genID);
+            InventoryItem[] items = result.Value.GetItems();
+            foreach (InventoryItem item in items)
+            {
+                int id = item.DefId.Value;
+                Debug.LogError(id);
+
+                string stringID = id.ToString();
+                int num = Convert.ToInt32(stringID[1..]);
+
+                if (stringID[0] == '2') skinButtons[num].GetComponent<Item>().StartAcquire();
+                else matButtons[num].GetComponent<Item>().StartAcquire();
+            }
         }
     }
 
@@ -112,13 +140,33 @@ public class SkinsManager : NetworkBehaviour
             int id = item.DefId.Value;
             Debug.LogError(id);
             int num = Convert.ToInt32(id.ToString()[1..]);
-            matButtons[num].GetComponent<MaterialScript>().UpdateAmount();
+            matButtons[num].GetComponent<MaterialScript>().StartAcquire();
         }
+    }
+
+    public IEnumerator CheckItemAcquisition(Item script)
+    {
+        GameObject image = script.reloadImage;
+        image.SetActive(true);
+        while (!script.isAcquired)
+        {
+            yield return new WaitForSeconds(0.5f);
+            image.transform.DORotate(new Vector3(0, 0, -360), 0.5f, RotateMode.FastBeyond360).SetRelative(true).SetEase(Ease.Linear);
+            script.UpdateUnlockStatus();
+        }
+        script.reloadImage.SetActive(false);
     }
 
     [Rpc(SendTo.Everyone)]
     public void SetMaterialRpc()
     {
+        currentSkin.GetComponent<MeshRenderer>().material = currentMat;
+    }
+
+    [Rpc(SendTo.Everyone)]
+    public void SetMaterialRpc(int matDataNum)
+    {
+        currentMat = matDatas[matDataNum].mat;
         currentSkin.GetComponent<MeshRenderer>().material = currentMat;
     }
 
@@ -170,7 +218,7 @@ public class SkinsManager : NetworkBehaviour
         {
             isMatPanelOpened = true;
             matGridParent.parent.parent.gameObject.SetActive(true);
-            if(isSkinPanelOpened) OpenCloseSkinPanel();
+            if (isSkinPanelOpened) OpenCloseSkinPanel();
             RedDotSetActive(false);
         }
         else
@@ -187,7 +235,7 @@ public class SkinsManager : NetworkBehaviour
         {
             isSkinPanelOpened = true;
             skinGridParent.parent.parent.gameObject.SetActive(true);
-            if(isMatPanelOpened) OpenCloseMatPanel();
+            if (isMatPanelOpened) OpenCloseMatPanel();
         }
         else
         {
@@ -213,7 +261,7 @@ public class SkinsManager : NetworkBehaviour
     private async Task RemoveAllItems() //purely for testing
     {
         InventoryItem[] items = SteamInventory.Items;
-        if(items == null) return;
+        if (items == null) return;
         foreach (InventoryItem item in items)
         {
             await item.ConsumeAsync(1);

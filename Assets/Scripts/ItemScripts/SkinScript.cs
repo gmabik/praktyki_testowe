@@ -6,40 +6,34 @@ using Unity.Netcode;
 using Steamworks;
 using TMPro;
 
-public class SkinScript : MonoBehaviour
+public class SkinScript : Item
 {
-    public bool IsUnlocked { get; private set; }
-    private Image image;
-    public SkinsManager manager;
     public int skinDataNum;
     public SkinSO skinData;
-    public InventoryDef itemDef;
-    [SerializeField] private TMP_Text priceText;
 
-    public void OnSpawn()
+    public new void OnSpawn()
     {
         skinData = manager.skinDatas[skinDataNum];
         manager.defsWithPrices.TryGetValue(skinData.id, out itemDef);
-        //print(itemDef.LocalPrice + "       " + itemDef.LocalBasePrice);
-        image = GetComponent<Image>();
+        base.OnSpawn();
         image.sprite = skinData.sprite;
-        StartUnlock();
     }
 
-    public async void StartUnlock()
+    public override void UpdateUnlockStatus()
     {
-        await SteamInventory.GetAllItemsAsync();
+        SteamInventory.GetAllItems();
         if (manager.CheckIfHasItem(skinData.id).Count > 0)
         {
-            print("count > 0");
-            priceText.text = "Owned";
+            //print("count > 0");
+            text.text = "Owned";
             IsUnlocked = true;
+            isAcquired = true;
         }
         else
         {
-            priceText.text = itemDef.LocalPriceFormatted;
+            text.text = itemDef.LocalPriceFormatted;
             IsUnlocked = false;
-            print("count = 0");
+            //print("count = 0");
         }
     }
 
@@ -48,7 +42,7 @@ public class SkinScript : MonoBehaviour
         if (!IsUnlocked)
         {
             manager.gameObject.GetComponent<PurchaseManager>().StartPurchase(itemDef);
-            StartUnlock();
+            UpdateUnlockStatus();
         }
         else manager.SpawnNewSkinRpc(skinDataNum);
     }

@@ -6,54 +6,43 @@ using Unity.Netcode;
 using Steamworks;
 using TMPro;
 
-public class MaterialScript : MonoBehaviour
+public class MaterialScript : Item
 {
-    public bool IsUnlocked { get; private set; }
-    private Image image;
-    public SkinsManager manager;
     public int matDataNum;
     public MaterialSO matData;
-    public InventoryDef itemDef;
     private int currentAmount;
-    [SerializeField] private TMP_Text amountText;
 
-    public void OnSpawn()
+    public new void OnSpawn()
     {
         matData = manager.matDatas[matDataNum];
         itemDef = new InventoryDef(matData.id);
-        image = GetComponent<Image>();
+        base.OnSpawn();
         image.sprite = matData.sprite;
-        UpdateAmount();
         UpdateUIAmount();
-    }
-
-    public void Unlock()
-    {
-        IsUnlocked = true;
-        image.color = Color.white;
     }
 
     public void OnClick()
     {
         if (!IsUnlocked)
         {
-            UpdateAmount();
+            UpdateUnlockStatus();
         }
         else
         {
             manager.currentMat = matData.mat;
-            manager.SetMaterialRpc();
+            manager.SetMaterialRpc(matDataNum);
         }
     }
 
-    public async void UpdateAmount()
+    public override void UpdateUnlockStatus()
     {
-        await SteamInventory.GetAllItemsAsync();
+        SteamInventory.GetAllItems();
         var list = manager.CheckIfHasItem(matData.id);
         if (currentAmount != list.Count)
         {
             currentAmount = list.Count;
             UpdateUIAmount();
+            isAcquired = true;
         }
     }
 
@@ -63,13 +52,14 @@ public class MaterialScript : MonoBehaviour
         {
             IsUnlocked = false;
             image.color = Color.black;
-            amountText.gameObject.SetActive(false);
+            text.gameObject.SetActive(false);
         }
         else
         {
-            Unlock();
-            amountText.gameObject.SetActive(true);
-            amountText.text = "x" + currentAmount;
+            IsUnlocked = true;
+            image.color = Color.white;
+            text.gameObject.SetActive(true);
+            text.text = "x" + currentAmount;
         }
     }
 }
