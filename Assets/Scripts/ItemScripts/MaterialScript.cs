@@ -18,7 +18,7 @@ public class MaterialScript : Item
         itemDef = new InventoryDef(matData.id);
         base.OnSpawn();
         image.sprite = matData.sprite;
-        UpdateUIAmount();
+        UpdateUnlockStatus();
     }
 
     public void OnClick()
@@ -34,16 +34,17 @@ public class MaterialScript : Item
         }
     }
 
-    public override void UpdateUnlockStatus()
+    public override async void UpdateUnlockStatus()
     {
-        SteamInventory.GetAllItems();
+        await SteamInventory.GetAllItemsAsync();
         var list = manager.CheckIfHasItem(matData.id);
         if (currentAmount != list.Count)
         {
             currentAmount = list.Count;
-            UpdateUIAmount();
             isAcquired = true;
+            reloadImage.SetActive(false);
         }
+        UpdateUIAmount();
     }
 
     private void UpdateUIAmount()

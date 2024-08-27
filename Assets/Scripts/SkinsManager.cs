@@ -27,17 +27,17 @@ public class SkinsManager : NetworkBehaviour
 
 
     public Dictionary<int, InventoryDef> defsWithPrices;
+    private Task dictTask;
 
-#pragma warning disable CS1998 // В асинхронном методе отсутствуют операторы await, будет выполнен синхронный метод
     private async void Awake()
-#pragma warning restore CS1998 // В асинхронном методе отсутствуют операторы await, будет выполнен синхронный метод
     {
         //await RemoveAllItems();
+        dictTask = Task.Run(() => MakeDictionary());
     }
 
-    public override async void OnNetworkSpawn()
+    
+    public async void Start()
     {
-
         //SteamInventory.OnInventoryUpdated += UpdateInventory;
 
         matGridParent.parent.parent.gameObject.SetActive(false);
@@ -55,8 +55,7 @@ public class SkinsManager : NetworkBehaviour
             mat.GetComponent<MaterialScript>().OnSpawn();
         }
 
-        defsWithPrices = new Dictionary<int, InventoryDef>();
-        defsWithPrices = ConvertToDict(await SteamInventory.GetDefinitionsWithPricesAsync());
+        await dictTask;
 
         for (int i = 0; i < skinDatas.Count; i++)
         {
@@ -74,13 +73,20 @@ public class SkinsManager : NetworkBehaviour
         currentMat = matDatas[0].mat;
     }
 
+    private async Task MakeDictionary()
+    {
+        defsWithPrices = new Dictionary<int, InventoryDef>();
+        InventoryDef[] items = await SteamInventory.GetDefinitionsWithPricesAsync();
+        defsWithPrices = ConvertToDict(items);
+    }
+
+
     private IEnumerator GrantStarterSkins()
     {
         GrantStarter(10, 30);
         yield return new WaitForSeconds(2);
         GrantStarter(20, 32);
     }
-
 
     private async void GrantStarter(int itemID, int generatorID)
     {
@@ -147,14 +153,14 @@ public class SkinsManager : NetworkBehaviour
     public IEnumerator CheckItemAcquisition(Item script)
     {
         GameObject image = script.reloadImage;
-        image.SetActive(true);
         while (!script.isAcquired)
         {
-            yield return new WaitForSeconds(0.5f);
-            image.transform.DORotate(new Vector3(0, 0, -360), 0.5f, RotateMode.FastBeyond360).SetRelative(true).SetEase(Ease.Linear);
+            image.SetActive(true);
+            image.transform.DORotate(new Vector3(0, 0, -360), 1f, RotateMode.FastBeyond360).SetRelative(true).SetEase(Ease.Linear);
             script.UpdateUnlockStatus();
+            yield return new WaitForSeconds(1f);
+            script.reloadImage.SetActive(false);
         }
-        script.reloadImage.SetActive(false);
     }
 
     [Rpc(SendTo.Everyone)]

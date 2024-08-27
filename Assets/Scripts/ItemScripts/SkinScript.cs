@@ -28,6 +28,7 @@ public class SkinScript : Item
             text.text = "Owned";
             IsUnlocked = true;
             isAcquired = true;
+            reloadImage.SetActive(false);
         }
         else
         {

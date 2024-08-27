@@ -28,4 +28,10 @@ public abstract class Item : MonoBehaviour
         isAcquired = false;
         manager.StartCoroutine(manager.CheckItemAcquisition(this));
     }
+
+    private void OnEnable()
+    {
+        //UpdateUnlockStatus();
+        if (isAcquired) reloadImage.SetActive(false);
+    }
 }
