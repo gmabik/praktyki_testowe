@@ -220,38 +220,24 @@ public class SkinsManager : NetworkBehaviour
     private bool isMatPanelOpened;
     public void OpenCloseMatPanel()
     {
-        if (!isMatPanelOpened)
-        {
-            isMatPanelOpened = true;
-            matGridParent.parent.parent.gameObject.SetActive(true);
-            if (isSkinPanelOpened) OpenCloseSkinPanel();
-            RedDotSetActive(false);
-        }
-        else
-        {
-            isMatPanelOpened = false;
-            matGridParent.parent.parent.gameObject.SetActive(false);
-        }
+        isMatPanelOpened = !isMatPanelOpened;
+        matGridParent.parent.parent.gameObject.SetActive(!matGridParent.parent.parent.gameObject.activeSelf);
+        RedDotSetActive(false);
+        if (isSkinPanelOpened) OpenCloseSkinPanel();
     }
 
     private bool isSkinPanelOpened;
     public void OpenCloseSkinPanel()
     {
-        if (!isSkinPanelOpened)
-        {
-            isSkinPanelOpened = true;
-            skinGridParent.parent.parent.gameObject.SetActive(true);
-            if (isMatPanelOpened) OpenCloseMatPanel();
-        }
-        else
-        {
-            isSkinPanelOpened = false;
-            skinGridParent.parent.parent.gameObject.SetActive(false);
-        }
+        isSkinPanelOpened = !isSkinPanelOpened;
+        skinGridParent.parent.parent.gameObject.SetActive(!skinGridParent.parent.parent.gameObject.activeSelf);
+        if (isMatPanelOpened) OpenCloseMatPanel();
     }
 
     public void RedDotSetActive(bool state)
-        => redDot.SetActive(state);
+    { 
+        redDot.SetActive(state);
+    }
     #endregion
 
     public Dictionary<int, InventoryDef> ConvertToDict(InventoryDef[] defs)

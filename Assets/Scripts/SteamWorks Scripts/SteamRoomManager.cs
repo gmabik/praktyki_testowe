@@ -10,8 +10,17 @@ using Netcode.Transports.Facepunch;
 
 public class SteamRoomManager : MonoBehaviour
 {
+    public static SteamRoomManager instance;
     [SerializeField] private TMP_InputField inputLobbyID;
     [SerializeField] private TMP_Text lobbyIDText;
+    private ulong hostID;
+
+    private void Awake()
+    {
+        if (instance != null) Destroy(instance);
+        instance = this;
+        //DontDestroyOnLoad(gameObject);
+    }
 
     private void OnEnable()
     {
@@ -57,6 +66,7 @@ public class SteamRoomManager : MonoBehaviour
         _lobby.SetPublic();
         _lobby.SetJoinable(true);
         NetworkManager.Singleton.StartHost();
+
     }
 
     private void SteamMatchmaking_OnLobbyEntered(Lobby _lobby)
@@ -84,6 +94,11 @@ public class SteamRoomManager : MonoBehaviour
 
     private void SteamMatchmaking_OnLobbyMemberLeave(Lobby _lobby, Friend _friend)
     {
+        if (hostID == _friend.Id)
+        {
+            StopAllCoroutines();
+            StartCoroutine(HostLeft());
+        }
         UpdatePlayerList();
     }
 
@@ -151,13 +166,14 @@ public class SteamRoomManager : MonoBehaviour
         print("ID: " + LobbySaver.instance.currentLobby?.Id.ToString());
         menuPanel.SetActive(false);
         lobbyPanel.SetActive(true);
-        print(NetworkManager.Singleton.IsHost);
+        print("is host: " + NetworkManager.Singleton.IsHost);
         if (!NetworkManager.Singleton.IsHost) startGameButton.SetActive(false);
     }
 
     public void LeaveLobby()
     {
         LobbySaver.instance.currentLobby?.Leave();
+        StopAllCoroutines();
         LobbySaver.instance.currentLobby = null;
         NetworkManager.Singleton.Shutdown();
 
@@ -224,5 +240,52 @@ public class SteamRoomManager : MonoBehaviour
     public void StartGame()
     {
         NetworkManager.Singleton.SceneManager.LoadScene("Game", LoadSceneMode.Single);
+    }
+
+    private IEnumerator HostLeft()
+    {
+        Debug.LogError(LobbySaver.instance.currentLobby.Value.Owner.Name + "         " + LobbySaver.instance.currentLobby.Value.Owner.Id == SteamClient.SteamId + "");
+        NetworkManager.Singleton.Shutdown();
+
+        hostID = LobbySaver.instance.currentLobby.Value.Owner.Id;
+        if (LobbySaver.instance.currentLobby.Value.Owner.Id == SteamClient.SteamId)
+        {
+            while (!NetworkManager.Singleton.IsHost)
+            {
+                NetworkManager.Singleton.StartHost();
+                yield return new WaitForSeconds(1f);
+            }
+        }
+        else
+        {
+            while (!NetworkManager.Singleton.IsConnectedClient)
+            {
+                NetworkManager.Singleton.gameObject.GetComponent<FacepunchTransport>().targetSteamId = LobbySaver.instance.currentLobby.Value.Owner.Id;
+                NetworkManager.Singleton.StartClient();
+                yield return new WaitForSeconds(1f);
+            }
+        }
+
+        UpdatePlayerList();
+        if (NetworkManager.Singleton.IsHost) startGameButton.SetActive(true);
+
+        //NetworkManager.Singleton.SceneManager.LoadScene("LobbyMenu", LoadSceneMode.Single);
+
+
+
+
+
+
+        /*yield return new WaitForSeconds(5f);
+if (LobbySaver.instance.currentLobby.Value.Owner.Id == SteamClient.SteamId)
+{
+    NetworkManager.Singleton.StartHost();
+}
+if (NetworkManager.Singleton.IsHost) yield break;
+yield return new WaitForSeconds(5f);
+NetworkManager.Singleton.gameObject.GetComponent<FacepunchTransport>().targetSteamId = LobbySaver.instance.currentLobby.Value.Owner.Id;
+NetworkManager.Singleton.StartClient();
+        print("is host: " + NetworkManager.Singleton.IsHost);
+        if (NetworkManager.Singleton.IsHost && SceneManager.GetActiveScene().name == "LobbyMenu") startGameButton.SetActive(true);*/
     }
 }

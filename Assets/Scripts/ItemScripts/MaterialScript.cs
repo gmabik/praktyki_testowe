@@ -11,6 +11,7 @@ public class MaterialScript : Item
     public int matDataNum;
     public MaterialSO matData;
     private int currentAmount;
+    [SerializeField] private GameObject redDot;
 
     public new void OnSpawn()
     {
@@ -31,9 +32,11 @@ public class MaterialScript : Item
         {
             manager.currentMat = matData.mat;
             manager.SetMaterialRpc(matDataNum);
+            redDot.SetActive(false);
         }
     }
 
+    private bool startCheck = true;
     public override async void UpdateUnlockStatus()
     {
         await SteamInventory.GetAllItemsAsync();
@@ -43,6 +46,8 @@ public class MaterialScript : Item
             currentAmount = list.Count;
             isAcquired = true;
             reloadImage.SetActive(false);
+            if (startCheck) startCheck = false;
+            else redDot.SetActive(true);
         }
         UpdateUIAmount();
     }

@@ -13,6 +13,7 @@ public class ClickManager : NetworkBehaviour
 {
     [SerializeField] private int clickCount;
     [SerializeField] private TMP_Text clickCountText;
+    [SerializeField] private float defaultTimeForNextSkin;
     [SerializeField] private float timeForNextSkin;
     [SerializeField] private float timeLeft;
     [SerializeField] private TMP_Text timerText;
@@ -22,8 +23,10 @@ public class ClickManager : NetworkBehaviour
 
     private void Start()
     {
-        timeForNextSkin /= LobbySaver.instance.currentLobby.Value.MemberCount;
+        timeForNextSkin = defaultTimeForNextSkin / LobbySaver.instance.currentLobby.Value.MemberCount;
         timeLeft = timeForNextSkin;
+        SteamMatchmaking.OnLobbyMemberLeave += RecalculateTime;
+        SteamMatchmaking.OnLobbyMemberJoined += RecalculateTime;
     }
 
     private void Update()
@@ -68,5 +71,12 @@ public class ClickManager : NetworkBehaviour
     {
         //skinManager.matButtons[num].GetComponent<MaterialScript>().Unlock();
         skinManager.GrantItem(31);
+    }
+
+    private void RecalculateTime(Lobby _lobby, Friend _friend)
+    {
+        float percent = timeLeft / timeForNextSkin;
+        timeForNextSkin = defaultTimeForNextSkin / LobbySaver.instance.currentLobby.Value.MemberCount;
+        timeLeft = percent * timeForNextSkin;
     }
 }
