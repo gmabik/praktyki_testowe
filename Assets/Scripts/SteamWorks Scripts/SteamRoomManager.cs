@@ -246,8 +246,8 @@ public class SteamRoomManager : MonoBehaviour
     {
         Debug.LogError(LobbySaver.instance.currentLobby.Value.Owner.Name + "         " + LobbySaver.instance.currentLobby.Value.Owner.Id == SteamClient.SteamId + "");
         NetworkManager.Singleton.Shutdown();
-
         hostID = LobbySaver.instance.currentLobby.Value.Owner.Id;
+        yield return new WaitForSeconds(1f);
         if (LobbySaver.instance.currentLobby.Value.Owner.Id == SteamClient.SteamId)
         {
             while (!NetworkManager.Singleton.IsHost)
