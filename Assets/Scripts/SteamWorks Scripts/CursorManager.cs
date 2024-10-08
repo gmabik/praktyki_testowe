@@ -23,17 +23,7 @@ public class CursorManager : NetworkBehaviour
 
     private void SceneLoaded(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
     {
-        if (IsHost && sceneName == "Game")
-        {
-            foreach (ulong id in clientsCompleted)
-            {
-                GameObject cursor = Instantiate(CursorPrefab);
-                cursor.GetComponent<NetworkObject>().SpawnAsPlayerObject(id, true);
-
-                var cursorNetworkObject = cursor.GetComponent<NetworkObject>();
-                ParentToCanvasRpc(cursorNetworkObject);
-            }
-        }
+        SpawnCursors();
     }
 
     [Rpc(SendTo.Everyone)]
@@ -42,6 +32,21 @@ public class CursorManager : NetworkBehaviour
         if (cursorReference.TryGet(out NetworkObject cursor))
         {
             cursor.transform.SetParent(canvas);
+        }
+    }
+
+    public void SpawnCursors()
+    {
+        if (IsHost)
+        {
+            foreach (KeyValuePair<ulong, NetworkClient> pair in NetworkManager.Singleton.ConnectedClients)
+            {
+                GameObject cursor = Instantiate(CursorPrefab);
+                cursor.GetComponent<NetworkObject>().SpawnAsPlayerObject(pair.Key, true);
+
+                var cursorNetworkObject = cursor.GetComponent<NetworkObject>();
+                ParentToCanvasRpc(cursorNetworkObject);
+            }
         }
     }
 }

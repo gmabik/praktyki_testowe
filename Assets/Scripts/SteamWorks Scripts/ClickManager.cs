@@ -11,11 +11,11 @@ using System;
 
 public class ClickManager : NetworkBehaviour
 {
-    [SerializeField] private int clickCount;
+    public int ClickCount;
     [SerializeField] private TMP_Text clickCountText;
     [SerializeField] private float defaultTimeForNextSkin;
     [SerializeField] private float timeForNextSkin;
-    [SerializeField] private float timeLeft;
+    public float TimeLeft;
     [SerializeField] private TMP_Text timerText;
     public GameObject clickButton;
     [SerializeField]
@@ -24,16 +24,31 @@ public class ClickManager : NetworkBehaviour
     private void Start()
     {
         timeForNextSkin = defaultTimeForNextSkin / LobbySaver.instance.currentLobby.Value.MemberCount;
-        timeLeft = timeForNextSkin;
+        if (LobbySaver.instance.hasDataSaved)
+        {
+            LoadData();
+        }
+        else
+        {
+            TimeLeft = timeForNextSkin;
+        }
+
         SteamMatchmaking.OnLobbyMemberLeave += RecalculateTime;
         SteamMatchmaking.OnLobbyMemberJoined += RecalculateTime;
     }
 
+    private void LoadData()
+    {
+        TimeLeft = LobbySaver.instance.percentOfTimeLeftBeforeChange * timeForNextSkin;
+        ClickCount = LobbySaver.instance.clicksBeforeChange;
+        clickCountText.text = ClickCount.ToString();
+    }
+
     private void Update()
     {
-        timeLeft -= Time.deltaTime;
-        if(timeLeft < 0) timeLeft = 0;
-        timerText.text = Mathf.Floor(timeLeft / 60) + ":" + Mathf.Floor(timeLeft % 60);
+        TimeLeft -= Time.deltaTime;
+        if(TimeLeft < 0) TimeLeft = 0;
+        timerText.text = Mathf.Floor(TimeLeft / 60) + ":" + Mathf.Floor(TimeLeft % 60);
     }
 
     public void OnClick()
@@ -45,8 +60,8 @@ public class ClickManager : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     private void UpdateClickCountServerRpc()
     {
-        clickCount++;
-        clickCountText.text = clickCount.ToString();
+        ClickCount++;
+        clickCountText.text = ClickCount.ToString();
 
         skinManager.ClickAnim();
     }
@@ -54,9 +69,9 @@ public class ClickManager : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     private void ResetTimerServerRpc()
     {
-        if (timeLeft <= 0)
+        if (TimeLeft <= 0)
         {
-            timeLeft = timeForNextSkin;
+            TimeLeft = timeForNextSkin;
             //int randomMatNum = 0;
             if (IsHost)
             {
@@ -75,8 +90,13 @@ public class ClickManager : NetworkBehaviour
 
     private void RecalculateTime(Lobby _lobby, Friend _friend)
     {
-        float percent = timeLeft / timeForNextSkin;
         timeForNextSkin = defaultTimeForNextSkin / LobbySaver.instance.currentLobby.Value.MemberCount;
-        timeLeft = percent * timeForNextSkin;
+        TimeLeft = percentOfTimeLeft * timeForNextSkin;
     }
+
+    public float percentOfTimeLeft
+        => TimeLeft / timeForNextSkin;
+
+    public int clicksAmount
+        => ClickCount;
 }

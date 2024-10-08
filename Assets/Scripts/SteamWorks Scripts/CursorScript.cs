@@ -11,7 +11,7 @@ public class CursorScript : NetworkBehaviour
     [SerializeField] private TMP_Text playerName;
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn();
+        //base.OnNetworkSpawn();
         playerName.raycastTarget = false;
         if (IsOwner)
         {

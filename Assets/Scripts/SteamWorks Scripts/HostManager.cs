@@ -4,43 +4,30 @@ using Steamworks.Data;
 using Steamworks.ServerList;
 using System;
 using System.Collections;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class HostManager : MonoBehaviour
 {
     [SerializeField] private GameObject hostLeftText;
-    [SerializeField] private ulong hostID;
-    private void OnEnable()
-    {
-        SteamMatchmaking.OnLobbyMemberLeave += LobbyMemberLeft;
-        StartCoroutine(DEBUG_printOwnerName());
-        hostID = LobbySaver.instance.currentLobby.Value.Owner.Id.Value;
-    }
 
-    private void OnDisable()
+    private void Start()
     {
-        SteamMatchmaking.OnLobbyMemberLeave -= LobbyMemberLeft;
-    }
-
-    private void LobbyMemberLeft(Lobby lobby, Friend friend)
-    {
-        if (hostID == friend.Id)
-        {
-            StopAllCoroutines();
-            StartCoroutine(HostLeft());
-        }
+        StartCoroutine(HostLeft());
     }
 
     private IEnumerator HostLeft()
     {
         Debug.LogError(LobbySaver.instance.currentLobby.Value.Owner.Name + "         " + LobbySaver.instance.currentLobby.Value.Owner.Id == SteamClient.SteamId + "");
 
-        hostLeftText.SetActive(true);
+        hostLeftText.GetComponent<TMP_Text>().text = "Previous host left. Changing host to " + LobbySaver.instance.currentLobby.Value.Owner.Name + "...";
 
         NetworkManager.Singleton.Shutdown();
-        hostID = LobbySaver.instance.currentLobby.Value.Owner.Id;
+
         yield return new WaitForSeconds(1f);
+
         if (LobbySaver.instance.currentLobby.Value.Owner.Id == SteamClient.SteamId)
         {
             while (!NetworkManager.Singleton.IsHost)
@@ -48,6 +35,13 @@ public class HostManager : MonoBehaviour
                 NetworkManager.Singleton.StartHost();
                 yield return new WaitForSeconds(1f);
             }
+
+            while (!HasAllConnected())
+            {
+                yield return new WaitForSeconds(1f);
+            }
+
+            NetworkManager.Singleton.SceneManager.LoadScene("Game", LoadSceneMode.Single);
         }
         else
         {
@@ -58,35 +52,9 @@ public class HostManager : MonoBehaviour
                 yield return new WaitForSeconds(1f);
             }
         }
-        hostLeftText.SetActive(false);
-
-        //NetworkManager.Singleton.SceneManager.LoadScene("LobbyMenu", LoadSceneMode.Single);
-
-
-
-
-
-
-        /*yield return new WaitForSeconds(5f);
-if (LobbySaver.instance.currentLobby.Value.Owner.Id == SteamClient.SteamId)
-{
-    NetworkManager.Singleton.StartHost();
-}
-if (NetworkManager.Singleton.IsHost) yield break;
-yield return new WaitForSeconds(5f);
-NetworkManager.Singleton.gameObject.GetComponent<FacepunchTransport>().targetSteamId = LobbySaver.instance.currentLobby.Value.Owner.Id;
-NetworkManager.Singleton.StartClient();
-        print("is host: " + NetworkManager.Singleton.IsHost);
-        if (NetworkManager.Singleton.IsHost && SceneManager.GetActiveScene().name == "LobbyMenu") startGameButton.SetActive(true);*/
     }
 
-    private IEnumerator DEBUG_printOwnerName()
-    {
-        while (true)
-        {
-            //if (!LobbySaver.instance.currentLobby.HasValue) yield return new WaitForSeconds(1f);
-            Debug.LogError("Steam lobby owner: " + LobbySaver.instance.currentLobby.Value.Owner.Name + ", is Netcode lobby owner: " + NetworkManager.Singleton.IsHost);
-            yield return new WaitForSeconds(1f);
-        }
-    }
+    [Rpc(SendTo.Server)]
+    private bool HasAllConnected()
+        => NetworkManager.Singleton.ConnectedClients.Count == LobbySaver.instance.currentLobby.Value.MemberCount;
 }

@@ -239,15 +239,19 @@ public class SteamRoomManager : MonoBehaviour
 
     public void StartGame()
     {
+        LobbySaver.instance.currentLobby.Value.SetPrivate();
+        LobbySaver.instance.currentLobby.Value.SetJoinable(false);
         NetworkManager.Singleton.SceneManager.LoadScene("Game", LoadSceneMode.Single);
     }
 
     private IEnumerator HostLeft()
     {
         Debug.LogError(LobbySaver.instance.currentLobby.Value.Owner.Name + "         " + LobbySaver.instance.currentLobby.Value.Owner.Id == SteamClient.SteamId + "");
+
         NetworkManager.Singleton.Shutdown();
         hostID = LobbySaver.instance.currentLobby.Value.Owner.Id;
         yield return new WaitForSeconds(1f);
+
         if (LobbySaver.instance.currentLobby.Value.Owner.Id == SteamClient.SteamId)
         {
             while (!NetworkManager.Singleton.IsHost)

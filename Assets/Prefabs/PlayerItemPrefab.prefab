@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4838422302917845196}
   - component: {fileID: 6581408394192679816}
   - component: {fileID: -5192475354155688352}
+  - component: {fileID: 1540071777417013617}
   m_Layer: 5
   m_Name: PlayerItemPrefab
   m_TagString: Untagged
@@ -150,6 +151,19 @@ MonoBehaviour:
   playerNameText: {fileID: 7931258486238655177}
   buttonImage: {fileID: 4838422302917845196}
   color: {r: 1, g: 0, b: 0, a: 1}
+--- !u!114 &1540071777417013617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5739140333318979657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 1
 --- !u!1 &7900545792636446213
 GameObject:
   m_ObjectHideFlags: 0
@@ -259,7 +273,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -279,7 +293,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 202.03905, y: 8.170395, z: -131.6067, w: 12.326174}
+  m_margin: {x: 202.03905, y: 8.170395, z: -188.64769, w: 12.326174}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
