@@ -66,7 +66,7 @@ public class SteamRoomManager : MonoBehaviour
         _lobby.SetPublic();
         _lobby.SetJoinable(true);
         NetworkManager.Singleton.StartHost();
-
+        NetworkManager.Singleton.SceneManager.ActiveSceneSynchronizationEnabled = true;
     }
 
     private void SteamMatchmaking_OnLobbyEntered(Lobby _lobby)
@@ -77,6 +77,7 @@ public class SteamRoomManager : MonoBehaviour
         if (NetworkManager.Singleton.IsHost) return;
         NetworkManager.Singleton.gameObject.GetComponent<FacepunchTransport>().targetSteamId = _lobby.Owner.Id;
         NetworkManager.Singleton.StartClient();
+        NetworkManager.Singleton.SceneManager.ActiveSceneSynchronizationEnabled = true;
     }
 
     /*
@@ -188,7 +189,6 @@ public class SteamRoomManager : MonoBehaviour
 
     [SerializeField] private PlayerItem playerItemPrefab;
     [SerializeField] private Transform playerItemGrid;
-    [SerializeField] private GameObject playButton;
     private void UpdatePlayerList()
     {
         for (int i = 0; i < playerItemGrid.childCount; i++)
@@ -205,15 +205,17 @@ public class SteamRoomManager : MonoBehaviour
             if (LobbySaver.instance.currentLobby?.Owner.Id == friend.Id)
             {
                 playerItem.SetColor();
-                playButton.SetActive(true);
+                startGameButton.SetActive(true);
             }
         }
     }
 
     public void CopyID()
     {
-        TextEditor editor = new TextEditor();
-        editor.text = LobbySaver.instance.currentLobby?.Id.ToString();
+        TextEditor editor = new()
+        {
+            text = LobbySaver.instance.currentLobby?.Id.ToString()
+        };
         editor.SelectAll();
         editor.Copy();
     }
@@ -239,8 +241,8 @@ public class SteamRoomManager : MonoBehaviour
 
     public void StartGame()
     {
-        LobbySaver.instance.currentLobby.Value.SetPrivate();
-        LobbySaver.instance.currentLobby.Value.SetJoinable(false);
+        //LobbySaver.instance.currentLobby.Value.SetPrivate();
+        //LobbySaver.instance.currentLobby.Value.SetJoinable(false);
         NetworkManager.Singleton.SceneManager.LoadScene("Game", LoadSceneMode.Single);
     }
 
@@ -249,9 +251,10 @@ public class SteamRoomManager : MonoBehaviour
         Debug.LogError(LobbySaver.instance.currentLobby.Value.Owner.Name + "         " + LobbySaver.instance.currentLobby.Value.Owner.Id == SteamClient.SteamId + "");
 
         NetworkManager.Singleton.Shutdown();
-        hostID = LobbySaver.instance.currentLobby.Value.Owner.Id;
+
         yield return new WaitForSeconds(1f);
 
+        hostID = LobbySaver.instance.currentLobby.Value.Owner.Id;
         if (LobbySaver.instance.currentLobby.Value.Owner.Id == SteamClient.SteamId)
         {
             while (!NetworkManager.Singleton.IsHost)
@@ -259,6 +262,14 @@ public class SteamRoomManager : MonoBehaviour
                 NetworkManager.Singleton.StartHost();
                 yield return new WaitForSeconds(1f);
             }
+
+            while (!HasAllConnected())
+            {
+                yield return new WaitForSeconds(1f);
+            }
+
+
+            startGameButton.SetActive(true);
         }
         else
         {
@@ -269,27 +280,9 @@ public class SteamRoomManager : MonoBehaviour
                 yield return new WaitForSeconds(1f);
             }
         }
-
-        UpdatePlayerList();
-        if (NetworkManager.Singleton.IsHost) startGameButton.SetActive(true);
-
-        //NetworkManager.Singleton.SceneManager.LoadScene("LobbyMenu", LoadSceneMode.Single);
-
-
-
-
-
-
-        /*yield return new WaitForSeconds(5f);
-if (LobbySaver.instance.currentLobby.Value.Owner.Id == SteamClient.SteamId)
-{
-    NetworkManager.Singleton.StartHost();
-}
-if (NetworkManager.Singleton.IsHost) yield break;
-yield return new WaitForSeconds(5f);
-NetworkManager.Singleton.gameObject.GetComponent<FacepunchTransport>().targetSteamId = LobbySaver.instance.currentLobby.Value.Owner.Id;
-NetworkManager.Singleton.StartClient();
-        print("is host: " + NetworkManager.Singleton.IsHost);
-        if (NetworkManager.Singleton.IsHost && SceneManager.GetActiveScene().name == "LobbyMenu") startGameButton.SetActive(true);*/
     }
+
+    [Rpc(SendTo.Server)]
+    private bool HasAllConnected()
+        => NetworkManager.Singleton.ConnectedClients.Count == LobbySaver.instance.currentLobby.Value.MemberCount;
 }

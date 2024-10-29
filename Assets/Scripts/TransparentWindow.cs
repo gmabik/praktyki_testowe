@@ -55,6 +55,10 @@ public class TransparentWindow : MonoBehaviour
 
             SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, 0);
             isTransparent = true;
+
+            Camera.main.transform.position = new Vector3(4.85f, 7, -2.9f);
+            Camera.main.transform.eulerAngles = new Vector3(90, 0, 0);
+            SetPosForTransparent();
         }
         else
         {
@@ -66,6 +70,10 @@ public class TransparentWindow : MonoBehaviour
 
             SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, 0);
             isTransparent = false;
+
+            Camera.main.transform.position = new Vector3(0, 5.5f, -9.5f);
+            Camera.main.transform.eulerAngles = new Vector3(50, 0, 0);
+            ReturnPosFromTransparent();
         }
 
 #endif
@@ -117,4 +125,10 @@ public class TransparentWindow : MonoBehaviour
         vec.z = 0f;
         return vec;
     }
+
+
+
+    public Action SetPosForTransparent;
+
+    public Action ReturnPosFromTransparent;
 }

@@ -29,7 +29,7 @@ public class SkinsManager : NetworkBehaviour
     public Dictionary<int, InventoryDef> defsWithPrices;
     private Task dictTask;
 
-    private async void Awake()
+    private void Awake()
     {
         //await RemoveAllItems();
         dictTask = Task.Run(() => MakeDictionary());
