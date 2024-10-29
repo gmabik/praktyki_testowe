@@ -5,27 +5,49 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine.UI;
 using Steamworks;
+using Unity.Collections;
+using Random = UnityEngine.Random;
 
 public class CursorScript : NetworkBehaviour
 {
-    [SerializeField] private TMP_Text playerName;
+    [SerializeField] private TMP_Text playerNameText;
+    public NetworkVariable<FixedString64Bytes> ownerName = new NetworkVariable<FixedString64Bytes>();
+    public NetworkVariable<Color32> playerColor = new NetworkVariable<Color32>();
+    [SerializeField] private Sprite cursorSprite;
+    public CursorManager cursorManager;
+
     public override void OnNetworkSpawn()
     {
         //base.OnNetworkSpawn();
-        playerName.raycastTarget = false;
+        playerNameText.raycastTarget = false;
         if (IsOwner)
         {
-            SetNameRpc(SteamClient.Name);
+            ownerName.Value = SteamClient.Name;
+            playerColor.Value = CreateColor();
+
+            SetDataRpc();
             gameObject.GetComponent<Image>().enabled = false;
-            playerName.enabled = false;
+            playerNameText.enabled = false;
+            cursorManager.OnCursorSpawnComplete(this);
         }
     }
+
     [Rpc(SendTo.Everyone)]
-    public void SetNameRpc(string name)
+    public void SetDataRpc()
     {
-        playerName.text = name;
+        playerNameText.text = ownerName.Value.ToString();
+        GetComponent<Image>().sprite = cursorSprite;
+        GetComponent<Image>().color = playerColor.Value;
     }
 
+    private Color32 CreateColor()
+    {
+        byte r = (byte) Random.Range(0, 255);
+        byte g = (byte) Random.Range(0, 255);
+        byte b = (byte) Random.Range(0, 255);
+
+        return new Color32(r, g, b, 255);
+    }
 
     private void Update()
     {

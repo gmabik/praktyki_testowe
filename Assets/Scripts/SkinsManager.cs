@@ -11,23 +11,26 @@ using System.Threading.Tasks;
 
 public class SkinsManager : NetworkBehaviour
 {
+    [Header("Skins")]
     [SerializeField] private GameObject skinItemPrefab;
+    [SerializeField] private Transform skinGridParent;
+    public GameObject currentSkin;
+    public List<SkinSO> skinDatas;
+    public List<GameObject> skinButtons;
+    public Dictionary<int, InventoryDef> defsWithPrices;
+    private Task dictTask;
+
+    [Header("Mats")]
     [SerializeField] private GameObject matItemPrefab;
     [SerializeField] private Transform matGridParent;
-    [SerializeField] private Transform skinGridParent;
-    [SerializeField] private Transform canvas;
-    public GameObject currentSkin;
     public Material currentMat;
-    [SerializeField] private Transform spawnPos;
-    public List<SkinSO> skinDatas;
     public List<MaterialSO> matDatas;
-    public List<GameObject> skinButtons;
     public List<GameObject> matButtons;
     [SerializeField] private GameObject redDot;
 
-
-    public Dictionary<int, InventoryDef> defsWithPrices;
-    private Task dictTask;
+    [Header("Misc")]
+    [SerializeField] private Transform canvas;
+    [SerializeField] private Transform spawnPos;
 
     private void Awake()
     {
