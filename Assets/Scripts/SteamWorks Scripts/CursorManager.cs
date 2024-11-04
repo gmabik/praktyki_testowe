@@ -33,7 +33,7 @@ public class CursorManager : NetworkBehaviour
         if (cursorReference.TryGet(out NetworkObject cursor))
         {
             cursor.transform.SetParent(canvas);
-            cursor.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+            cursor.transform.localScale = new Vector3(0.35f, 0.35f, 0.35f);
         }
     }
 
@@ -63,7 +63,10 @@ public class CursorManager : NetworkBehaviour
         if (IsHost)
         {
             SpawnCursor(id);
-            foreach (CursorScript script in cursorScripts) script.SetDataRpc();
+            foreach (CursorScript script in cursorScripts) 
+            { 
+                if(script != null) script.SetDataRpc(); 
+            }
         }
     }
 

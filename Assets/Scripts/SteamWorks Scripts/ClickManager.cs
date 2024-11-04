@@ -16,14 +16,14 @@ public class ClickManager : NetworkBehaviour
     [SerializeField] private GameObject canGetSkinText;
 
     [Header("Clicks")]
-    public NetworkVariable<int> ClickCount = new NetworkVariable<int>();
+    public NetworkVariable<int> ClickCount = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     [SerializeField] private TMP_Text clickCountText;
     public GameObject clickButton;
 
     [Header("Time")]
     [SerializeField] private float defaultTimeForNextSkin;
     [SerializeField] private float timeForNextSkin;
-    public NetworkVariable<float> TimeLeft = new NetworkVariable<float>();
+    public NetworkVariable<float> TimeLeft = new NetworkVariable<float>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     [SerializeField] private TMP_Text timerText;
 
     [Header("Refs")]
@@ -34,7 +34,7 @@ public class ClickManager : NetworkBehaviour
         TimeLeft.OnValueChanged += UpdateTimer;
         ClickCount.OnValueChanged += UpdateClickAmount;
 
-        if (IsHost)
+        if (IsOwner)
         {
             timeForNextSkin = defaultTimeForNextSkin / LobbySaver.instance.currentLobby.Value.MemberCount;
 
@@ -51,11 +51,14 @@ public class ClickManager : NetworkBehaviour
         }
 
         canGetSkin = percentOfTimeLeft >= timePercentToGetSkin;
-        ToggleCanGetSkinText();
+        if (IsOwner) ToggleCanGetSkinTextRpc();
     }
 
-    private void ToggleCanGetSkinText()
-    => canGetSkinText.SetActive(!canGetSkin);
+    [Rpc(SendTo.Everyone)]
+    private void ToggleCanGetSkinTextRpc()
+    {
+        canGetSkinText.SetActive(!canGetSkin);
+    }
 
     private void LoadData()
     {
@@ -66,6 +69,7 @@ public class ClickManager : NetworkBehaviour
 
     private void Update()
     {
+        if (!IsOwner) return;
         TimeLeft.Value -= Time.deltaTime;
         if(TimeLeft.Value < 0) TimeLeft.Value = 0;
     }
@@ -75,11 +79,12 @@ public class ClickManager : NetworkBehaviour
 
     public void OnClick()
     {
-        UpdateClickCount();
+        UpdateClickCountRpc();
         ResetTimerServerRpc();
     }
 
-    private void UpdateClickCount()
+    [Rpc(SendTo.Owner)]
+    private void UpdateClickCountRpc()
     {
         ClickCount.Value++;
     }
@@ -92,7 +97,7 @@ public class ClickManager : NetworkBehaviour
     }
 
 
-    [Rpc(SendTo.Everyone)]
+    [Rpc(SendTo.Owner)]
     private void ResetTimerServerRpc()
     {
         if (TimeLeft.Value <= 0)
@@ -103,7 +108,7 @@ public class ClickManager : NetworkBehaviour
                 UnlockRpc();
             }
             canGetSkin = true;
-            ToggleCanGetSkinText();
+            ToggleCanGetSkinTextRpc();
         }
     }
 

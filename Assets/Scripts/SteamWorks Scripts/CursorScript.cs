@@ -11,8 +11,8 @@ using Random = UnityEngine.Random;
 public class CursorScript : NetworkBehaviour
 {
     [SerializeField] private TMP_Text playerNameText;
-    public NetworkVariable<FixedString64Bytes> ownerName = new NetworkVariable<FixedString64Bytes>();
-    public NetworkVariable<Color32> playerColor = new NetworkVariable<Color32>();
+    public NetworkVariable<FixedString64Bytes> ownerName = new NetworkVariable<FixedString64Bytes>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<Color32> playerColor = new NetworkVariable<Color32>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     [SerializeField] private Sprite cursorSprite;
     public CursorManager cursorManager;
 
