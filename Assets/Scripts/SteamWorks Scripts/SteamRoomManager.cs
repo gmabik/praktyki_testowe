@@ -167,7 +167,7 @@ public class SteamRoomManager : MonoBehaviour
         print("ID: " + LobbySaver.instance.currentLobby?.Id.ToString());
         menuPanel.SetActive(false);
         lobbyPanel.SetActive(true);
-        print("is host: " + NetworkManager.Singleton.IsHost);
+        Debug.LogError("is host: " + NetworkManager.Singleton.IsHost + "      is server: " + NetworkManager.Singleton.IsServer);
         if (!NetworkManager.Singleton.IsHost) startGameButton.SetActive(false);
     }
 

@@ -16,14 +16,14 @@ public class ClickManager : NetworkBehaviour
     [SerializeField] private GameObject canGetSkinText;
 
     [Header("Clicks")]
-    public NetworkVariable<int> ClickCount = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<int> ClickCount = new NetworkVariable<int>();
     [SerializeField] private TMP_Text clickCountText;
     public GameObject clickButton;
 
     [Header("Time")]
     [SerializeField] private float defaultTimeForNextSkin;
-    [SerializeField] private float timeForNextSkin;
-    public NetworkVariable<float> TimeLeft = new NetworkVariable<float>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<float> timeForNextSkin = new NetworkVariable<float>();
+    public NetworkVariable<float> TimeLeft = new NetworkVariable<float>();
     [SerializeField] private TMP_Text timerText;
 
     [Header("Refs")]
@@ -33,10 +33,9 @@ public class ClickManager : NetworkBehaviour
     {
         TimeLeft.OnValueChanged += UpdateTimer;
         ClickCount.OnValueChanged += UpdateClickAmount;
-
-        if (IsOwner)
+        if (IsServer)
         {
-            timeForNextSkin = defaultTimeForNextSkin / LobbySaver.instance.currentLobby.Value.MemberCount;
+            timeForNextSkin.Value = defaultTimeForNextSkin / LobbySaver.instance.currentLobby.Value.MemberCount;
 
             if (LobbySaver.instance.hasDataSaved)
             {
@@ -44,32 +43,46 @@ public class ClickManager : NetworkBehaviour
             }
             else
             {
-                TimeLeft.Value = timeForNextSkin;
+                TimeLeft.Value = timeForNextSkin.Value;
             }
+            ManageSkinGettingRpc();
             SteamMatchmaking.OnLobbyMemberLeave += RecalculateTime;
             SteamMatchmaking.OnLobbyMemberJoined += RecalculateTime;
         }
+        ManageSkinGetting();
+    }
 
-        canGetSkin = percentOfTimeLeft >= timePercentToGetSkin;
-        if (IsOwner) ToggleCanGetSkinTextRpc();
+    private void ManageSkinGetting()
+    {
+        if (timeForNextSkin.Value == 0) return;
+        if (!LobbySaver.instance.hasDataSaved) canGetSkin = percentOfTimeLeft >= timePercentToGetSkin;
+        else canGetSkin = true;
+
+        ToggleCanGetSkinText();
     }
 
     [Rpc(SendTo.Everyone)]
-    private void ToggleCanGetSkinTextRpc()
+    private void ManageSkinGettingRpc()
     {
-        canGetSkinText.SetActive(!canGetSkin);
+        if (!LobbySaver.instance.hasDataSaved) canGetSkin = percentOfTimeLeft >= timePercentToGetSkin;
+        else canGetSkin = true;
+
+        ToggleCanGetSkinText();
     }
+
+    private void ToggleCanGetSkinText()
+        => canGetSkinText.SetActive(!canGetSkin);
 
     private void LoadData()
     {
-        TimeLeft.Value = LobbySaver.instance.percentOfTimeLeftBeforeChange * timeForNextSkin;
+        TimeLeft.Value = LobbySaver.instance.percentOfTimeLeftBeforeChange * timeForNextSkin.Value;
         ClickCount.Value = LobbySaver.instance.clicksBeforeChange;
-        clickCountText.text = ClickCount.ToString();
+        clickCountText.text = ClickCount.Value.ToString();
     }
 
     private void Update()
     {
-        if (!IsOwner) return;
+        if (!IsServer) return;
         TimeLeft.Value -= Time.deltaTime;
         if(TimeLeft.Value < 0) TimeLeft.Value = 0;
     }
@@ -83,7 +96,7 @@ public class ClickManager : NetworkBehaviour
         ResetTimerServerRpc();
     }
 
-    [Rpc(SendTo.Owner)]
+    [Rpc(SendTo.Server)]
     private void UpdateClickCountRpc()
     {
         ClickCount.Value++;
@@ -97,18 +110,13 @@ public class ClickManager : NetworkBehaviour
     }
 
 
-    [Rpc(SendTo.Owner)]
+    [Rpc(SendTo.Server)]
     private void ResetTimerServerRpc()
     {
         if (TimeLeft.Value <= 0)
         {
-            TimeLeft.Value = timeForNextSkin;
-            if (IsHost)
-            {
-                UnlockRpc();
-            }
-            canGetSkin = true;
-            ToggleCanGetSkinTextRpc();
+            TimeLeft.Value = timeForNextSkin.Value;
+            UnlockRpc();
         }
     }
 
@@ -116,16 +124,18 @@ public class ClickManager : NetworkBehaviour
     private void UnlockRpc()
     {
         if (canGetSkin) skinManager.GrantItem(31);
+        canGetSkin = true;
+        ToggleCanGetSkinText();
     }
 
     private void RecalculateTime(Lobby _lobby, Friend _friend)
     {
-        timeForNextSkin = defaultTimeForNextSkin / LobbySaver.instance.currentLobby.Value.MemberCount;
-        TimeLeft.Value = percentOfTimeLeft * timeForNextSkin;
+        timeForNextSkin.Value = defaultTimeForNextSkin / LobbySaver.instance.currentLobby.Value.MemberCount;
+        TimeLeft.Value = percentOfTimeLeft * timeForNextSkin.Value;
     }
 
     public float percentOfTimeLeft
-        => TimeLeft.Value / timeForNextSkin;
+        => TimeLeft.Value / timeForNextSkin.Value;
 
     public int clicksAmount
         => ClickCount.Value;

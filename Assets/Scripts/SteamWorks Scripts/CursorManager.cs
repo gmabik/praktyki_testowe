@@ -27,29 +27,37 @@ public class CursorManager : NetworkBehaviour
         SpawnCursorsForEachPlayer();
     }
 
-    [Rpc(SendTo.Everyone)]
-    public void ParentToCanvasRpc(NetworkObjectReference cursorReference)
+    public void ParentToCanvas(NetworkObjectReference cursorReference)
     {
         if (cursorReference.TryGet(out NetworkObject cursor))
         {
             cursor.transform.SetParent(canvas);
-            cursor.transform.localScale = new Vector3(0.35f, 0.35f, 0.35f);
         }
     }
 
     private void SpawnCursor(ulong id)
     {
-        GameObject cursor = Instantiate(CursorPrefab);
+        GameObject cursor = Instantiate(CursorPrefab, canvas);
         cursor.GetComponent<CursorScript>().cursorManager = this;
         cursor.GetComponent<NetworkObject>().SpawnAsPlayerObject(id, true);
 
         var cursorNetworkObject = cursor.GetComponent<NetworkObject>();
-        ParentToCanvasRpc(cursorNetworkObject);
+        ParentToCanvas(cursorNetworkObject);
+        RescaleCursorRpc(cursorNetworkObject);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void RescaleCursorRpc(NetworkObjectReference cursorReference)
+    {
+        if (cursorReference.TryGet(out NetworkObject cursor))
+        {
+            cursor.transform.localScale = new Vector3(0.35f, 0.35f, 0.35f);
+        }
     }
 
     public void SpawnCursorsForEachPlayer()
     {
-        if (IsHost)
+        if (IsServer)
         {
             foreach (KeyValuePair<ulong, NetworkClient> pair in NetworkManager.Singleton.ConnectedClients)
             {
@@ -60,19 +68,19 @@ public class CursorManager : NetworkBehaviour
 
     private void SpawnCursorForJoinedPlayer(ulong id)
     {
-        if (IsHost)
+        if (IsServer)
         {
             SpawnCursor(id);
             foreach (CursorScript script in cursorScripts) 
             { 
-                if(script != null) script.SetDataRpc(); 
+                if(script != null) script.SetDataForOtherClientsRpc(); 
             }
         }
     }
 
     private void AddCursorToList(CursorScript cursorScript)
     {
-        if (IsHost) cursorScripts.Add(cursorScript);
+        cursorScripts.Add(cursorScript);
     }
 
     public Action<CursorScript> OnCursorSpawnComplete;
