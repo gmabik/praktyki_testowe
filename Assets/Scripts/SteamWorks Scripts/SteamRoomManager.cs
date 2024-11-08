@@ -205,8 +205,9 @@ public class SteamRoomManager : MonoBehaviour
             if (LobbySaver.instance.currentLobby?.Owner.Id == friend.Id)
             {
                 playerItem.SetColor();
-                startGameButton.SetActive(true);
             }
+
+            if (NetworkManager.Singleton.IsHost) startGameButton.SetActive(true);
         }
     }
 

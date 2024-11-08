@@ -40,8 +40,6 @@ public class CursorManager : NetworkBehaviour
         GameObject cursor = Instantiate(CursorPrefab, canvas);
         cursor.GetComponent<CursorScript>().cursorManager = this;
         cursor.GetComponent<NetworkObject>().SpawnAsPlayerObject(id, true);
-
-        var cursorNetworkObject = cursor.GetComponent<NetworkObject>();
     }
 
     [Rpc(SendTo.Everyone)]
