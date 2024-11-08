@@ -69,30 +69,24 @@ public class CursorManager : NetworkBehaviour
             SpawnCursor(id);
             foreach (CursorScript script in cursorScripts) 
             { 
-                if(script != null) UpdateCursorDataRpc(script.GetComponent<NetworkObject>());
+                if(script != null) UpdateCursorData(script);
             }
         }
     }
 
     private void AddCursorToList(CursorScript cursorScript)
     {
+        if (!IsServer) return;
         cursorScripts.Add(cursorScript);
 
-        UpdateCursorDataRpc(cursorScript.GetComponent<NetworkObject>());
+        UpdateCursorData(cursorScript);
     }
 
-    [Rpc(SendTo.Everyone)]
-    private void UpdateCursorDataRpc(NetworkObjectReference cursorRef)
+    private void UpdateCursorData(CursorScript script)
     {
-        if (cursorRef.TryGet(out NetworkObject cursor))
-        {
-            var script = cursor.GetComponent<CursorScript>();
-
-            script.SetDataForOtherClientsRpc();
-            if (!IsServer) return;
-            ParentToCanvas(script.GetComponent<NetworkObject>());
-            RescaleCursorRpc(script.GetComponent<NetworkObject>());
-        }
+        script.SetDataForOtherClientsRpc();
+        ParentToCanvas(script.GetComponent<NetworkObject>());
+        RescaleCursorRpc(script.GetComponent<NetworkObject>());
     }
 
     public Action<CursorScript> OnCursorSpawnComplete;
