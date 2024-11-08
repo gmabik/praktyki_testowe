@@ -34,7 +34,7 @@ public class CursorScript : NetworkBehaviour
     {
         ownerName.Value = name;
         playerColor.Value = color;
-        SetDataForOtherClientsRpc();
+        //SetDataForOtherClientsRpc();
         cursorManager.OnCursorSpawnComplete(this);
     }
 
@@ -60,8 +60,14 @@ public class CursorScript : NetworkBehaviour
         if (IsOwner && transform.parent != null)
         {
             Vector2 newPos = (Vector2)Input.mousePosition / transform.parent.GetComponent<Canvas>().scaleFactor;
-            UpdatePosRpc(newPos);
+            SendNewPosToServerRpc(newPos);
         }
+    }
+
+    [Rpc(SendTo.Server)]
+    public void SendNewPosToServerRpc(Vector2 newPos)
+    {
+        UpdatePosRpc(newPos);
     }
 
     [Rpc(SendTo.Everyone)]

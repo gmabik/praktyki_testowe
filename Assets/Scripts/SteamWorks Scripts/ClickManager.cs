@@ -49,6 +49,7 @@ public class ClickManager : NetworkBehaviour
             SteamMatchmaking.OnLobbyMemberLeave += RecalculateTime;
             SteamMatchmaking.OnLobbyMemberJoined += RecalculateTime;
         }
+        clickCountText.text = ClickCount.Value.ToString();
         ManageSkinGetting();
     }
 
@@ -77,7 +78,6 @@ public class ClickManager : NetworkBehaviour
     {
         TimeLeft.Value = LobbySaver.instance.percentOfTimeLeftBeforeChange * timeForNextSkin.Value;
         ClickCount.Value = LobbySaver.instance.clicksBeforeChange;
-        clickCountText.text = ClickCount.Value.ToString();
     }
 
     private void Update()
@@ -130,8 +130,9 @@ public class ClickManager : NetworkBehaviour
 
     private void RecalculateTime(Lobby _lobby, Friend _friend)
     {
+        float percent = percentOfTimeLeft;
         timeForNextSkin.Value = defaultTimeForNextSkin / LobbySaver.instance.currentLobby.Value.MemberCount;
-        TimeLeft.Value = percentOfTimeLeft * timeForNextSkin.Value;
+        TimeLeft.Value = percent * timeForNextSkin.Value;
     }
 
     public float percentOfTimeLeft
