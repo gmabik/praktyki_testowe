@@ -16,7 +16,7 @@ public class SkinScript : Item
         skinData = manager.skinDatas[skinDataNum];
         manager.defsWithPrices.TryGetValue(skinData.id, out itemDef);
         base.OnSpawn();
-        image.sprite = skinData.sprite;
+        imageComponent.sprite = skinData.sprite;
     }
 
     public override void UpdateUnlockStatus()

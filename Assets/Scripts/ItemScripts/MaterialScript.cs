@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Unity.Netcode;
 using Steamworks;
 using TMPro;
+using System;
 
 public class MaterialScript : Item
 {
@@ -18,7 +19,7 @@ public class MaterialScript : Item
         matData = manager.matDatas[matDataNum];
         itemDef = new InventoryDef(matData.id);
         base.OnSpawn();
-        image.sprite = matData.sprite;
+        imageComponent.sprite = matData.sprite;
         UpdateUnlockStatus();
     }
 
@@ -57,13 +58,13 @@ public class MaterialScript : Item
         if (currentAmount == 0)
         {
             IsUnlocked = false;
-            image.color = Color.black;
+            imageComponent.color = Color.black;
             text.gameObject.SetActive(false);
         }
         else
         {
             IsUnlocked = true;
-            image.color = Color.white;
+            imageComponent.color = Color.white;
             text.gameObject.SetActive(true);
             text.text = "x" + currentAmount;
         }

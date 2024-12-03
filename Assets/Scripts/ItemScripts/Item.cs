@@ -8,7 +8,7 @@ using TMPro;
 public abstract class Item : MonoBehaviour
 {
     public bool IsUnlocked { get; protected set; }
-    public Image image;
+    public Image imageComponent;
     public SkinsManager manager;
     public InventoryDef itemDef;
     [SerializeField] protected TMP_Text text;
@@ -16,8 +16,9 @@ public abstract class Item : MonoBehaviour
 
     public void OnSpawn()
     {
-        image = GetComponent<Image>();
+        //image = GetComponent<Image>();
         UpdateUnlockStatus();
+        ChangeScale();
     }
 
     public abstract void UpdateUnlockStatus();
@@ -33,5 +34,10 @@ public abstract class Item : MonoBehaviour
     {
         //UpdateUnlockStatus();
         if (isAcquired) reloadImage.SetActive(false);
+    }
+
+    private void ChangeScale()
+    {
+        transform.localScale = new(0.7f, 0.7f, 0.7f);
     }
 }

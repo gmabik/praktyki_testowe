@@ -144,22 +144,9 @@ public class SteamRoomManager : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private GameObject lobbyCreateOrJoinPanel;
-    [SerializeField] private GameObject lobbyJoiningPanel;
     [SerializeField] private GameObject lobbyPanel;
     [SerializeField] private GameObject menuPanel;
     [SerializeField] private GameObject startGameButton;
-
-    public void OpenJoinRoomPanel()
-    {
-        lobbyCreateOrJoinPanel.SetActive(false);
-        lobbyJoiningPanel.SetActive(true);
-    }
-
-    public void OpenChoicePanel()
-    {
-        lobbyCreateOrJoinPanel.SetActive(true);
-        lobbyJoiningPanel.SetActive(false);
-    }
 
     public void OpenLobbyPanel()
     {
