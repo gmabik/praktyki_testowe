@@ -11,6 +11,8 @@ using UnityEngine.SceneManagement;
 
 public class HostManager : MonoBehaviour
 {
+    // used after changing scene to HostChangeScreen, where it makes the same operations of host transition (check out SteamRoomManager.cs/HostLeft() for more info)
+
     [SerializeField] private GameObject hostLeftText;
 
     private void Start()

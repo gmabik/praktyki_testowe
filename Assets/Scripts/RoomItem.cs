@@ -5,6 +5,8 @@ using TMPro;
 
 public class RoomItem : MonoBehaviour
 {
+    // not used, can be deleted
+
     [SerializeField] private TMP_Text roomName;
     [SerializeField] private TMP_Text playerAmount;
     private SteamRoomManager manager;

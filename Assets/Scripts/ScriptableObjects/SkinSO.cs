@@ -9,5 +9,5 @@ public class SkinSO : ScriptableObject
 {
     public NetworkPrefab model;
     public Sprite sprite;
-    public int id;
+    public int id; // steam id, which you get when adding an item to steam
 }

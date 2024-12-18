@@ -10,17 +10,19 @@ using Netcode.Transports.Facepunch;
 
 public class SteamRoomManager : MonoBehaviour
 {
+    #region singleton
     public static SteamRoomManager instance;
-    [SerializeField] private TMP_InputField inputLobbyID;
-    [SerializeField] private TMP_Text lobbyIDText;
-    private ulong hostID;
-
     private void Awake()
     {
         if (instance != null) Destroy(instance);
         instance = this;
         //DontDestroyOnLoad(gameObject);
     }
+    #endregion
+    [SerializeField] private TMP_InputField inputLobbyID;
+    [SerializeField] private TMP_Text lobbyIDText;
+    private ulong hostID;
+
 
     private void OnEnable()
     {
@@ -45,7 +47,7 @@ public class SteamRoomManager : MonoBehaviour
         SteamMatchmaking.OnLobbyGameCreated -= SteamMatchmaking_OnLobbyGameCreated;*/
     }
 
-    private async void SteamFriends_OnGameLobbyJoinRequested(Lobby _lobby, SteamId _steamID)
+    private async void SteamFriends_OnGameLobbyJoinRequested(Lobby _lobby, SteamId _steamID) // when invited from steam friends
     {
         RoomEnter joinedLobby = await _lobby.Join();
         if (joinedLobby == RoomEnter.Success)
@@ -128,19 +130,6 @@ public class SteamRoomManager : MonoBehaviour
             }
         }
     }
-
-    /*public async void JoinLobbyWithID(ulong id)
-    {
-        Lobby[] lobbies = await SteamMatchmaking.LobbyList.WithSlotsAvailable(1).RequestAsync();
-        foreach (Lobby lobby in lobbies)
-        {
-            if (lobby.Id == id)
-            {
-                await lobby.Join();
-                return;
-            }
-        }
-    }*/
 
     [Header("UI")]
     [SerializeField] private GameObject lobbyCreateOrJoinPanel;
@@ -236,7 +225,14 @@ public class SteamRoomManager : MonoBehaviour
 
     private IEnumerator HostLeft()
     {
-        Debug.LogError(LobbySaver.instance.currentLobby.Value.Owner.Name + "         " + LobbySaver.instance.currentLobby.Value.Owner.Id == SteamClient.SteamId + "");
+        Debug.LogError(LobbySaver.instance.currentLobby.Value.Owner.Name + "         " + LobbySaver.instance.currentLobby.Value.Owner.Id == SteamClient.SteamId + ""); // for debug purposes only
+
+        /* basically, steamworks support host change, but unity netcode doesn't
+         * 
+         * so what i've done is shutting down netcode lobby, and new host (chosen by steamworks) would create a new one
+         * after new one is created, all other players will join it
+         */ 
+
 
         NetworkManager.Singleton.Shutdown();
 

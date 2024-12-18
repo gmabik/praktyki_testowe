@@ -11,6 +11,8 @@ using System;
 
 public class CursorManager : NetworkBehaviour
 {
+    // manages cursor spawning and data setting between clients
+
     [SerializeField] private GameObject CursorPrefab;
     [SerializeField] private List<CursorScript> cursorScripts;
     [SerializeField] private Transform canvas;

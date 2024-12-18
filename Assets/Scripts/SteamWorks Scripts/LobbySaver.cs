@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class LobbySaver : MonoBehaviour
 {
+    //saves current lobby data for use and current game data for host transition
+
     public static LobbySaver instance;
     public Lobby? currentLobby;
 

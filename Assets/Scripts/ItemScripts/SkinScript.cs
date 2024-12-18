@@ -8,6 +8,7 @@ using TMPro;
 
 public class SkinScript : Item
 {
+    //for skins, which has to be bought (models of different amount of money)
     public int skinDataNum;
     public SkinSO skinData;
 

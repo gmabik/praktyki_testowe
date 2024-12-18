@@ -9,6 +9,7 @@ using System;
 
 public class MaterialScript : Item
 {
+    //for skins, that drop (basically materials)
     public int matDataNum;
     public MaterialSO matData;
     private int currentAmount;

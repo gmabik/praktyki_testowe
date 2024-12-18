@@ -21,7 +21,8 @@ public class HostChangeStarter : MonoBehaviour
         SteamMatchmaking.OnLobbyMemberLeave -= LobbyMemberLeft;
     }
 
-    /*private void Update()
+    // was used for testing by one person
+    /*private void Update() 
     {
         if (Input.GetKeyDown(KeyCode.P))
         {

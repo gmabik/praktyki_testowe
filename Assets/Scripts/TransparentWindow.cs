@@ -7,6 +7,8 @@ using UnityEngine.EventSystems;
 
 public class TransparentWindow : MonoBehaviour
 {
+    // used for transparent background mode
+
     [DllImport("user32.dll")]
     public static extern int MessageBox(IntPtr hWnd, string text, string caption, uint type);
     [DllImport("user32.dll")]
@@ -45,7 +47,7 @@ public class TransparentWindow : MonoBehaviour
     {
         hwnd = GetActiveWindow();
 #if !UNITY_EDITOR_
-        if (!isTransparent)
+        if (!isTransparent) // normal -> transparent
         {
             plane.SetActive(false); 
             MARGINS margins = new() { leftWidth = -1 };
@@ -60,7 +62,7 @@ public class TransparentWindow : MonoBehaviour
             Camera.main.transform.eulerAngles = new Vector3(90, 0, 0);
             SetPosForTransparent();
         }
-        else
+        else // transparent -> normal
         {
             plane.SetActive(true);
             MARGINS margins = new() { leftWidth = -1 };

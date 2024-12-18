@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class UIPosChangeForTransparency : MonoBehaviour
 {
+    // this class is used to change ui pos when entering and exiting transparent background mode
+
     [SerializeField] private TransparentWindow transparentWindowScript;
 
     [SerializeField] private Vector3 normalPos;

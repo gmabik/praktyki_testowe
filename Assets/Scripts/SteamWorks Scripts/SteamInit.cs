@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class SteamInit : MonoBehaviour
 {
     private bool isConnected = false;
-    private async void Start()
+    private async void Start() //initiates a connection to steam services, loads item definitions for later use
     {
         try
         {
@@ -30,10 +30,10 @@ public class SteamInit : MonoBehaviour
         SteamInventory.LoadItemDefinitions();
     }
 
-    private string GetName()
+    private string GetName() //gets client's name
         => SteamClient.Name;
 
-    private IEnumerator CallBacks()
+    private IEnumerator CallBacks() // w/o this callbacks wouldn't work
     {
         while (true)
         {
@@ -42,12 +42,12 @@ public class SteamInit : MonoBehaviour
         }
     }
 
-    public void OnClick()
+    public void OnClick() // loads lobby connecting scene
     {
         if(isConnected) SceneManager.LoadScene("LobbyMenu");
     }
 
-    private void OnApplicationQuit()
+    private void OnApplicationQuit() // closes connection to steam services when app is closed
     {
         SteamClient.Shutdown();
     }

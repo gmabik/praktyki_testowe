@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 
 public class SkinsManager : NetworkBehaviour
 {
+    // manages skins and materials acquisition, ui updating
+
     [Header("Skins")]
     [SerializeField] private GameObject skinItemPrefab;
     [SerializeField] private Transform skinGridParent;
@@ -76,7 +78,7 @@ public class SkinsManager : NetworkBehaviour
         currentMat = matDatas[0].mat;
     }
 
-    private async Task MakeDictionary()
+    private async Task MakeDictionary() // makes dictionary of all skins
     {
         defsWithPrices = new Dictionary<int, InventoryDef>();
         InventoryDef[] items = await SteamInventory.GetDefinitionsWithPricesAsync();
@@ -201,7 +203,7 @@ public class SkinsManager : NetworkBehaviour
         }
     }
 
-    public void ClickAnim()
+    public void ClickAnim() // does this little anim when clicking 
     {
         this.StopAllCoroutines();
         currentSkin.transform.DOComplete();
@@ -219,7 +221,7 @@ public class SkinsManager : NetworkBehaviour
         skin.DORotate(spawnPos.rotation.eulerAngles, 0.2f);
     }*/
 
-    #region
+    #region UI
     private bool isMatPanelOpened;
     public void OpenCloseMatPanel()
     {
@@ -253,7 +255,7 @@ public class SkinsManager : NetworkBehaviour
         return dict;
     }
 
-    private async Task RemoveAllItems() //purely for testing
+    private async Task RemoveAllItems() //purely for testing, removes all items from player's steam inventory (only from Greedy)
     {
         InventoryItem[] items = SteamInventory.Items;
         if (items == null) return;

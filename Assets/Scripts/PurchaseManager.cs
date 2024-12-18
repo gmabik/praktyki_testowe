@@ -11,6 +11,9 @@ using System;
 
 public class PurchaseManager : MonoBehaviour
 {
+    // WASN'T TESTED
+    // script for purchase managing for skins, most of it was copied from Facepunch Documentation
+
     public InventoryDef item;
     private SkinsManager skinManager;
 
