@@ -1,0 +1,17 @@
+{
+    "appid": 3092070,
+    "items": [
+	{
+ "itemdefid": "32",
+ 	  "name": "StarterModelGen",
+  	"bundle": "20",
+  	"quantity": 0,
+  	"description": "stuff gen",
+  	"name_color": "FFC0CB",
+  	"tradable": false,
+  	"marketable": false,
+  	"commodity": false,
+  	"item_slot": "generator"
+	}
+    ]
+}
