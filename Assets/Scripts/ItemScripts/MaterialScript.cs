@@ -32,7 +32,7 @@ public class MaterialScript : Item
         }
         else
         {
-            manager.currentMat = matData.mat;
+            manager.currentMatData = matData;
             manager.SetMaterialRpc(matDataNum);
             redDot.SetActive(false);
         }

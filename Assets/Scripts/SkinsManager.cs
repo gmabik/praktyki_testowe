@@ -25,7 +25,7 @@ public class SkinsManager : NetworkBehaviour
     [Header("Mats")]
     [SerializeField] private GameObject matItemPrefab;
     [SerializeField] private Transform matGridParent;
-    public Material currentMat;
+    public MaterialSO currentMatData;
     public List<MaterialSO> matDatas;
     public List<GameObject> matButtons;
     [SerializeField] private GameObject redDot;
@@ -75,7 +75,7 @@ public class SkinsManager : NetworkBehaviour
         StartCoroutine(GrantStarterSkins());
 
         currentSkin.GetComponent<MeshRenderer>().material = matDatas[0].mat;
-        currentMat = matDatas[0].mat;
+        currentMatData = matDatas[0];
     }
 
     private async Task MakeDictionary() // makes dictionary of all skins
@@ -171,14 +171,28 @@ public class SkinsManager : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     public void SetMaterialRpc()
     {
-        currentSkin.GetComponent<MeshRenderer>().material = currentMat;
+        currentSkin.GetComponent<MeshRenderer>().material = currentMatData.mat;
+        if (currentMatData.effect != null) 
+        { 
+            GameObject effect = Instantiate(currentMatData.effect, currentSkin.transform);
+            effect.transform.localPosition = Vector3.zero;
+            effect.transform.localEulerAngles = new(-45f, -90f, 0f);
+            effect.GetComponent<EffectScript>().clickManager = gameObject.GetComponent<ClickManager>();
+        }
     }
 
     [Rpc(SendTo.Everyone)]
     public void SetMaterialRpc(int matDataNum)
     {
-        currentMat = matDatas[matDataNum].mat;
-        currentSkin.GetComponent<MeshRenderer>().material = currentMat;
+        currentMatData = matDatas[matDataNum];
+        currentSkin.GetComponent<MeshRenderer>().material = currentMatData.mat;
+        if (currentMatData.effect != null)
+        {
+            GameObject effect = Instantiate(currentMatData.effect, currentSkin.transform);
+            effect.transform.localPosition = Vector3.zero;
+            effect.transform.localEulerAngles = new(-45f, -90f, 0f);
+            effect.GetComponent<EffectScript>().clickManager = gameObject.GetComponent<ClickManager>();
+        }
     }
 
     [Rpc(SendTo.Owner)]
