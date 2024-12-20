@@ -14,4 +14,9 @@ public class EffectScript : MonoBehaviour
 
     private void PlayParticle(int _prev, int _new)
         => particle.Play();
+
+    private void OnDestroy()
+    {
+        clickManager.ClickCount.OnValueChanged -= PlayParticle;
+    }
 }

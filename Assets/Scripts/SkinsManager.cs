@@ -168,16 +168,19 @@ public class SkinsManager : NetworkBehaviour
         }
     }
 
+    private GameObject currentEffect;
     [Rpc(SendTo.Everyone)]
     public void SetMaterialRpc()
     {
         currentSkin.GetComponent<MeshRenderer>().material = currentMatData.mat;
+        if(currentEffect != null) Destroy(currentEffect);
         if (currentMatData.effect != null) 
         { 
             GameObject effect = Instantiate(currentMatData.effect, currentSkin.transform);
             effect.transform.localPosition = Vector3.zero;
             effect.transform.localEulerAngles = new(-45f, -90f, 0f);
             effect.GetComponent<EffectScript>().clickManager = gameObject.GetComponent<ClickManager>();
+            currentEffect = effect;
         }
     }
 
@@ -186,12 +189,14 @@ public class SkinsManager : NetworkBehaviour
     {
         currentMatData = matDatas[matDataNum];
         currentSkin.GetComponent<MeshRenderer>().material = currentMatData.mat;
+        if (currentEffect != null) Destroy(currentEffect);
         if (currentMatData.effect != null)
         {
             GameObject effect = Instantiate(currentMatData.effect, currentSkin.transform);
             effect.transform.localPosition = Vector3.zero;
             effect.transform.localEulerAngles = new(-45f, -90f, 0f);
             effect.GetComponent<EffectScript>().clickManager = gameObject.GetComponent<ClickManager>();
+            currentEffect = effect;
         }
     }
 
